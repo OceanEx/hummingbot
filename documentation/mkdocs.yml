@@ -150,6 +150,7 @@ nav:
         - Bamboo Relay: connectors/bamboo-relay.md
         - Dolomite: connectors/dolomite.md
         - 0x Relayers: connectors/0x.md
+        - OceanEx: connectors/oceanex.md
       - Strategies:
         - Strategies Overview: strategies/index.md
         - Arbitrage: strategies/arbitrage.md

@@ -1,3 +1,6 @@
+This is a fork extended with an exchange connector for [OceanEx](https://oceanex.pro).
+Refer to this [file](documentation/docs/connectors/oceanex.md) for information about the connector.
+
 ![Hummingbot](https://i.ibb.co/X5zNkKw/blacklogo-with-text.png)
 
 ----

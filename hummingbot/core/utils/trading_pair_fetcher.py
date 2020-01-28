@@ -24,6 +24,7 @@ LIQUID_ENDPOINT = "https://api.liquid.com/products"
 BITTREX_ENDPOINT = "https://api.bittrex.com/v3/markets"
 DOLOMITE_ENDPOINT = "https://exchange-api.dolomite.io/v1/markets"
 BITCOIN_COM_ENDPOINT = "https://api.exchange.bitcoin.com/api/2/public/symbol"
+OCEAN_ENDPOINT = "https://api.oceanex.pro/v1/markets"
 
 API_CALL_TIMEOUT = 5
 
@@ -346,6 +347,24 @@ class TradingPairFetcher:
 
         return []
 
+    @staticmethod
+    async def fetch_ocean_trading_pairs() -> List[str]:
+        from hummingbot.market.ocean.ocean_market import OceanMarket
+
+        async with aiohttp.ClientSession() as client:
+            async with client.get(OCEAN_ENDPOINT, timeout=API_CALL_TIMEOUT) as response:
+                if response.status == 200:
+                    try:
+                        body: Dict[str, any] = await response.json()
+                        data = body['data']
+                        trading_pairs: list = [entry['id'] for entry in data]
+                        return [OceanMarket.convert_from_exchange_trading_pair(p)
+                                for p in trading_pairs]
+                    except Exception:
+                        pass
+                        # Do nothing if the request fails -- there will be no autocomplete for ocean trading pairs
+                return []
+
     async def fetch_all(self):
         binance_trading_pairs = await self.fetch_binance_trading_pairs()
         ddex_trading_pairs = await self.fetch_ddex_trading_pairs()
@@ -360,6 +379,7 @@ class TradingPairFetcher:
         idex_trading_pairs = await self.fetch_idex_trading_pairs()
         bittrex_trading_pairs = await self.fetch_bittrex_trading_pairs()
         bitcoin_com_trading_pairs = await self.fetch_bitcoin_com_trading_pairs()
+        ocean_trading_pairs = await self.fetch_ocean_trading_pairs()
         self.trading_pairs = {
             "binance": binance_trading_pairs,
             "dolomite": dolomite_trading_pairs,
@@ -371,6 +391,7 @@ class TradingPairFetcher:
             "huobi": huobi_trading_pairs,
             "liquid": liquid_trading_pairs,
             "bittrex": bittrex_trading_pairs,
-            "bitcoin_com": bitcoin_com_trading_pairs
+            "bitcoin_com": bitcoin_com_trading_pairs,
+            "ocean": ocean_trading_pairs,
         }
         self.ready = True

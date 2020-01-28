@@ -95,6 +95,8 @@ class StartCommand:
                 self.clock.add_iterator(self.wallet)
             for market in self.markets.values():
                 if market is not None:
+                    if 'ocean' == market.name:
+                        await market.init()
                     self.clock.add_iterator(market)
                     self.markets_recorder.restore_market_states(config_path, market)
                     if len(market.limit_orders) > 0:

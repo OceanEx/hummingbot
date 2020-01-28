@@ -197,6 +197,16 @@ global_config_map = {
                   prompt="Enter your bitcoin_com secret key >>> ",
                   required_if=using_exchange("bitcoin_com"),
                   is_secure=True),
+    "ocean_uid":
+        ConfigVar(key="ocean_uid",
+                  prompt="Enter your Ocean uid >>> ",
+                  required_if=using_exchange("ocean"),
+                  is_secure=True),
+    "ocean_private_key_file":
+        ConfigVar(key="ocean_private_key_file",
+                  prompt="Enter your Ocean private key file >>> ",
+                  required_if=using_exchange("ocean"),
+                  is_secure=True),
     "wallet":
         ConfigVar(key="wallet",
                   prompt="Would you like to import an existing wallet or create a new wallet? (import/create) >>> ",

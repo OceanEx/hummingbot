@@ -71,6 +71,10 @@ kucoin_passphrase = os.getenv("KUCOIN_PASSPHRASE")
 bitcoin_com_api_key = os.getenv("BITCOIN_COM_API_KEY")
 bitcoin_com_secret_key = os.getenv("BITCOIN_COM_SECRET_KEY")
 
+# Ocean Tests
+ocean_uid = os.getenv("ocean_uid")
+ocean_private_key_file = os.getenv("ocean_private_key_file")
+
 test_web3_provider_list = [os.getenv("WEB3_PROVIDER")]
 
 # Liquid Tests
