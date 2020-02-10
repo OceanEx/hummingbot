@@ -65,7 +65,7 @@ from hummingbot.market.ocean.ocean_client import OceanClient
 
 hm_logger = None
 s_decimal_0 = Decimal(0)
-TRADING_PAIR_SPLITTER = re.compile(r"^(\w+)(usdt|husd|btc|eth|ht|trx)$")
+TRADING_PAIR_SPLITTER = re.compile(r"^(\w+)(btc|eth|usd|usdt|vet)$")
 
 
 cdef class OceanMarketTransactionTracker(TransactionTracker):
@@ -148,8 +148,22 @@ cdef class OceanMarket(MarketBase):
         try:
             m = TRADING_PAIR_SPLITTER.match(trading_pair)
             return m.group(1), m.group(2)
+        # Exceptions are now logged as warnings in trading pair fetcher
         except Exception as e:
-            raise ValueError(f"Error parsing trading_pair {trading_pair}: {str(e)}")
+            return None
+
+    @staticmethod
+    def convert_from_exchange_trading_pair(exchange_trading_pair: str) -> Optional[str]:
+        pair = OceanMarket.split_trading_pair(exchange_trading_pair)
+        if pair is None:
+            return None
+        # Ocean uses lowercase base and quote asset (btcusdt)
+        return f"{pair[0].upper()}-{pair[1].upper()}"
+
+    @staticmethod
+    def convert_to_exchange_trading_pair(hb_trading_pair: str) -> str:
+        # Ocean uses lowercase (btcusdt)
+        return hb_trading_pair.replace("-", "").lower()
 
     @property
     def name(self) -> str:

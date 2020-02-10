@@ -152,18 +152,18 @@ class OceanClient:
             rate_limit_breached = self.get_rate_limit_breached(resp)
             if rate_limit_breached:
                 self._rate_limit_breaches += 1
-                msg = f"rate limit breached, wait {wait} seconds, "
-                msg += f"url={url} , params = {params} , data = {data}"
-                self.logger().warning(msg)
+                self.logger().warning(
+                    f"API rate limit breached, wait={wait}s "
+                    f"url={url} params={params}")
                 await asyncio.sleep(wait)
                 wait *= 2
-            else:
-                return resp
 
         if attempts >= max_attempts:
-            msg = f"exhausted {max_attempts} attempts to overcome rate limit"
-            msg += " , url={url} params={params} data={data}"
-            raise OceanException(msg)
+            raise OceanException(
+                f"exhausted {max_attempts} attempts to overcome rate limit "
+                f"url={url} params={params}")
+
+        return resp
 
     @classmethod
     def get_rate_limit_breached(cls, resp: Dict[str, Any]):

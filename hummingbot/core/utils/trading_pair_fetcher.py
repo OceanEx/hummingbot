@@ -347,23 +347,26 @@ class TradingPairFetcher:
 
         return []
 
-    @staticmethod
-    async def fetch_ocean_trading_pairs() -> List[str]:
-        from hummingbot.market.ocean.ocean_market import OceanMarket
-
-        async with aiohttp.ClientSession() as client:
+    async def fetch_ocean_trading_pairs(self) -> List[str]:
+        try:
+            from hummingbot.market.ocean.ocean_market import OceanMarket
+            client: aiohttp.ClientSession = self.http_client()
             async with client.get(OCEAN_ENDPOINT, timeout=API_CALL_TIMEOUT) as response:
                 if response.status == 200:
-                    try:
-                        body: Dict[str, any] = await response.json()
-                        data = body['data']
-                        trading_pairs: list = [entry['id'] for entry in data]
-                        return [OceanMarket.convert_from_exchange_trading_pair(p)
-                                for p in trading_pairs]
-                    except Exception:
-                        pass
-                        # Do nothing if the request fails -- there will be no autocomplete for ocean trading pairs
-                return []
+                    body: Dict[str, any] = await response.json()
+                    trading_pairs: List[str] = []
+                    for entry in body['data']:
+                        raw_name = entry['id']
+                        name = OceanMarket.convert_from_exchange_trading_pair(raw_name)
+                        if name is not None:
+                            trading_pairs.append(name)
+                        else:
+                            self.logger().debug(f"Could not parse the trading pair {raw_name}, skipping it...")
+                    return trading_pairs
+        except Exception:
+            # Do nothing if the request fails -- there will be no autocomplete for ocean trading pairs
+            pass
+        return []
 
     async def fetch_all(self):
         binance_trading_pairs = await self.fetch_binance_trading_pairs()

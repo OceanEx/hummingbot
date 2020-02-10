@@ -205,8 +205,7 @@ global_config_map = {
     "ocean_private_key_file":
         ConfigVar(key="ocean_private_key_file",
                   prompt="Enter your Ocean private key file >>> ",
-                  required_if=using_exchange("ocean"),
-                  is_secure=True),
+                  required_if=using_exchange("ocean")),
     "wallet":
         ConfigVar(key="wallet",
                   prompt="Would you like to import an existing wallet or create a new wallet? (import/create) >>> ",

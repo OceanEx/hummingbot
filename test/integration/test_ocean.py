@@ -22,6 +22,7 @@ from hummingbot.core.event.events import (
     MarketEvent, MarketOrderFailureEvent,
     OrderFilledEvent, OrderCancelledEvent,
     BuyOrderCompletedEvent, SellOrderCompletedEvent)
+from hummingbot.core.utils.trading_pair_fetcher import TradingPairFetcher
 from hummingbot.market.ocean.ocean_api_order_book_data_source \
     import OceanAPIOrderBookDataSource
 from hummingbot.market.ocean.ocean_in_flight_order import OceanInFlightOrder
@@ -544,6 +545,22 @@ class TestOceanMarket(unittest.TestCase):
             CancellationResult('b', False)
         ]
         self.assertEqual(exp_results, results)
+
+
+class TestRelated(unittest.TestCase):
+    def test_TradingPairFetcher_fetch_ocean_trading_pairs(self):
+        g_ev_loop.run_until_complete(
+            self._test_TradingPairFetcher_fetch_ocean_trading_pairs())
+
+    async def _test_TradingPairFetcher_fetch_ocean_trading_pairs(self):
+        fetcher = TradingPairFetcher()
+        pairs: List[str] = await fetcher.fetch_ocean_trading_pairs()
+        sep = '-'
+        for name in pairs:
+            sep_index = name.find(sep)
+            msg = f"no separator({sep}) in {name}"
+            self.assertTrue(sep_index > 0, msg)
+            self.assertTrue(sep_index < len(name) - 1, msg)
 
 
 if __name__ == '__main__':

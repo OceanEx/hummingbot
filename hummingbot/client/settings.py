@@ -63,7 +63,7 @@ EXAMPLE_PAIRS = {
     "idex": "ZRX-ETH",
     "liquid": "ETH-USD",
     "radar_relay": "ZRX-WETH",
-    "ocean": "btcusdt",
+    "ocean": "BTC-USDT",
 }
 
 EXAMPLE_ASSETS = {
