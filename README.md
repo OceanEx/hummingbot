@@ -65,7 +65,7 @@ We created hummingbot to promote **decentralized market-making**: enabling membe
 - [Installation guide](https://docs.hummingbot.io/installation/)
 - [Installation scripts](./installation/)
 
-### Using OceanEx Hmmingbot connector  
+### Using Hmmingbot OceanEx connector  
 
 ## Contributions
 
