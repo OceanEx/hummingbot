@@ -1,5 +1,15 @@
 This is a fork extended with an exchange connector for [OceanEx](https://oceanex.pro).
+It is based on version 0.22.0.
+
+Please refer to documentation inside this repo. This is the [index](documentation/docs/index.md).
+The official Hummingbot documentation may contain newer information.
 Refer to this [file](documentation/docs/connectors/oceanex.md) for information about the connector.
+
+For installation, build from source using the manual option steps. Instructions for
+[linux](https://docs.hummingbot.io/installation/from-source/linux/).
+Don't forget to clone this repo instead of upstream Hummingbot repo.
+We don't provide a docker image so docker install will use the upstream repo's
+docker image.
 
 ![Hummingbot](https://i.ibb.co/X5zNkKw/blacklogo-with-text.png)
 
