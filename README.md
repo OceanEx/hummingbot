@@ -23,6 +23,7 @@ We created hummingbot to promote **decentralized market-making**: enabling membe
 |<img src="documentation/docs/assets/img/huobi_logo.png" alt="Huobi Global" width="90" />| huobi | [Huobi Global](https://www.hbg.com) | 1 | [API](https://huobiapi.github.io/docs/spot/v1/en/) | [![Build Status](https://jenkins-02.coinalpha.com/buildStatus/icon?job=hb_test-exchange_huobi&subject=test)](https://jenkins-02.coinalpha.com/job/hb_test-exchange_huobi/) |
 |<img src="documentation/docs/assets/img/bittrex_logo.png" alt="Bittrex Global" width="90" height="30" />| bittrex | [Bittrex Global](https://global.bittrex.com/) | 1 | [API](https://bittrex.github.io/api/v1-1) |
 | <img src="documentation/docs/assets/img/liquid_logo.png" alt="Liquid" width="90" /> | liquid | [Liquid](https://www.liquid.com/) | 2 | [API](https://developers.liquid.com/) |
+|<img src="documentation/docs/assets/img/oceanex.png" alt="OceanEx Global" width="90" height="30" />| oceanex | [OceanEx Global](https://oceanex.pro/en) | * | [API](https://api.oceanex.pro/doc/v1/#introduction) |
 
 ## Supported decentralized exchanges
 
@@ -63,6 +64,8 @@ We created hummingbot to promote **decentralized market-making**: enabling membe
 
 - [Installation guide](https://docs.hummingbot.io/installation/)
 - [Installation scripts](./installation/)
+
+### Using OceanEx Hmmingbot connector  
 
 ## Contributions
 
