@@ -8,8 +8,12 @@ Refer to this [file](documentation/docs/connectors/oceanex.md) for information a
 For installation, build from source using the manual option steps. Instructions for
 [linux](https://docs.hummingbot.io/installation/from-source/linux/).
 Don't forget to clone this repo instead of upstream Hummingbot repo.
-We don't provide a docker image so docker install will use the upstream repo's
-docker image.
+
+You can use a docker image from our [repo](https://hub.docker.com/repository/docker/oceanexchange/hummingbot).
+Below is a sample command.
+
+    docker run -it --mount "type=bind,src=$(pwd)/conf,dst=/conf" --mount "type=bind,src=$(pwd)/logs,dst=/logs" --mount "type=bind,src=$(pwd)/data,dst=/data" oceanexchange/hummingbot:0.22.0
+
 
 ![Hummingbot](https://i.ibb.co/X5zNkKw/blacklogo-with-text.png)
 
