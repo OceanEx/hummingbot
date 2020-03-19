@@ -3,7 +3,11 @@
 1. [Change log](#Change-log)
 2. [Introduction](#Introduction)
 3. [Supported centralized exchanges](#Supported-centralized-exchanges)
-4. [Getting Started](#Getting-Started)
+4. [Supported decentralized exchanges](#Supported-decentralized-exchanges)
+5. [Community contributed exchange connectors](#Community-contributed-exchange-connectors)
+6. [Currently available strategies](#Currently-available-strategies)
+7. [Getting Started](#Getting-Started)
+
 
 ## Change log
 
