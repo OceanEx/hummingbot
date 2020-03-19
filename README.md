@@ -1,4 +1,4 @@
-# Hummingbot (OceanEx Fork version) Introduction
+# Hummingbot (OceanEx Fork Version) Introduction
 
 1. [Change log](#Change-log)
 2. [Introduction](#Introduction)
