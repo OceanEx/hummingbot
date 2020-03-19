@@ -8,16 +8,6 @@ function pause() {
 echo
 echo "** ✏️  Creating a new Hummingbot instance **"
 echo
-# Specify hummingbot version
-echo "ℹ️  Press [enter] for default values."
-echo
-echo "➡️  Enter Hummingbot version: [latest|development] (default = \"latest\")"
-read TAG
-if [ "$TAG" == "" ]
-then
-  TAG="latest"
-fi
-echo
 # Ask the user for the name of the new instance
 echo "➡️  Enter a name for your new Hummingbot instance: (default = \"hummingbot-instance\")"
 read INSTANCE_NAME
@@ -39,7 +29,7 @@ then
   FOLDER=$DEFAULT_FOLDER
 fi
 echo
-echo "Creating your hummingbot instance: \"$INSTANCE_NAME\" (coinalpha/hummingbot:$TAG)"
+echo "Creating your hummingbot instance: \"$INSTANCE_NAME\" (oceanexchange/hummingbot:0.22.0)"
 echo
 echo "Your files will be saved to:"
 echo "=> instance folder:    $PWD/$FOLDER"
@@ -65,4 +55,4 @@ docker run -it \
 --mount "type=bind,source=$(pwd)/$FOLDER/hummingbot_conf,destination=/conf/" \
 --mount "type=bind,source=$(pwd)/$FOLDER/hummingbot_logs,destination=/logs/" \
 --mount "type=bind,source=$(pwd)/$FOLDER/hummingbot_data,destination=/data/" \
-coinalpha/hummingbot:$TAG
+oceanexchange/hummingbot:0.22.0
