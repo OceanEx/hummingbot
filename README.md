@@ -7,13 +7,14 @@
 5. [Community contributed exchange connectors](#Community-contributed-exchange-connectors)
 6. [Currently available strategies](#Currently-available-strategies)
 7. [Getting Started](#Getting-Started)
+8. [Legal](#Legal)
 
 
 ## Change log
 
 | Version            | Note              | date     |   
 | ------------------ | ----------        | ---------|
-| 0.0.1             | init version      |2020-03-10|
+| 0.22.0             | init version      |2020-03-10|
 
 ## Introduction 
 This is a fork extended with an exchange connector for [OceanEx](https://oceanex.pro).
