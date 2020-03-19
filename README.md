@@ -81,28 +81,6 @@ We created hummingbot to promote **decentralized market-making**: enabling membe
 
 ### Using Hmmingbot OceanEx connector  
 
-## Contributions
-
-We welcome contributions from the community:
-- **Code contributions** via [pull requests](./pulls).
-- **Bug reports** / **feature requests** through [github issues](./issues).
-- **Development discussions**: visit the [Hummingbot Dev Forum](https://forum.hummingbot.io).
-- [**Hummingbot code base**](./hummingbot): located in the `hummingbot/` folder
-- When contributing, please review the [contributing guidelines](CONTRIBUTING.md).
-
-## Contact
-
-### Hummingbot community
-- Join us on [Discord](https://discord.coinalpha.com).
-- Follow Hummingbot on [Twitter](https://twitter.com/hummingbot_io).
-
-### CoinAlpha
-
-Hummingbot was created and is maintained by [CoinAlpha](https://www.coinalpha.com).
-
-- **General**: contact us at [dev@hummingbot.io](mailto:dev@hummingbot.io) or join our [Discord server](https://discord.coinalpha.com).
-- **Business inquiries**: contact us at [partnerships@hummingbot.io](mailto:partnerships@hummingbot.io).
-
 ## Legal
 
 - **License**: Hummingbot is licensed under [Apache 2.0](./LICENSE).
