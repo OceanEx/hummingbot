@@ -15,7 +15,7 @@ echo "➡️  Enter Hummingbot version: [latest|development] (default = \"latest
 read TAG
 if [ "$TAG" == "" ]
 then
-  TAG="latest"
+  TAG=0.22.0
 fi
 echo
 # Ask the user for the name of the new instance
@@ -39,7 +39,7 @@ then
   FOLDER=$DEFAULT_FOLDER
 fi
 echo
-echo "Creating your hummingbot instance: \"$INSTANCE_NAME\" (coinalpha/hummingbot:$TAG)"
+echo "Creating your hummingbot instance: \"$INSTANCE_NAME\" (oceanexchange/hummingbot:$TAG)"
 echo
 echo "Your files will be saved to:"
 echo "=> instance folder:    $PWD/$FOLDER"
@@ -65,4 +65,4 @@ docker run -it \
 --mount "type=bind,source=$(pwd)/$FOLDER/hummingbot_conf,destination=/conf/" \
 --mount "type=bind,source=$(pwd)/$FOLDER/hummingbot_logs,destination=/logs/" \
 --mount "type=bind,source=$(pwd)/$FOLDER/hummingbot_data,destination=/data/" \
-coinalpha/hummingbot:$TAG
+oceanexchange/hummingbot:$TAG
