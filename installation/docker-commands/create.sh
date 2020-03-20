@@ -11,7 +11,7 @@ echo
 # Specify hummingbot version
 echo "ℹ️  Press [enter] for default values."
 echo
-echo "➡️  Enter Hummingbot version: [latest|development] (default = \"0.22.0\")"
+echo "➡️  Enter Hummingbot version: [0.22.0] (default = \"0.22.0\")"
 read TAG
 if [ "$TAG" == "" ]
 then
