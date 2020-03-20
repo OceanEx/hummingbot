@@ -7,6 +7,9 @@
 5. [Community contributed exchange connectors](#Community-contributed-exchange-connectors)
 6. [Currently available strategies](#Currently-available-strategies)
 7. [Getting Started](#Getting-Started)
+   - [Learn more about Hummingbot](#Learn-more-about-Hummingbot)
+   - [Install Hummingbot](#Install-Hummingbot)
+   - [Using Hmmingbot OceanEx connector](#Using-Hmmingbot-OceanEx-connector)
 8. [Legal](#Legal)
 
 
