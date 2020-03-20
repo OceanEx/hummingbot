@@ -15,9 +15,9 @@
 
 ## Change log
 
-| Version            | Note              | date     |   
-| ------------------ | ----------        | ---------|
-| 0.22.0             | init version      |2020-03-10|
+| Doc Version     |  Software Version  | Note           | date       |   
+| --------------- | ------------------ | -------------- | ---------- |
+| 0.0.1           |     0.22.0         |  init version  | 2020-03-10 |
 
 ## Introduction 
 This is a fork extended with an exchange connector for [OceanEx](https://oceanex.pro).
