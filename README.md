@@ -15,7 +15,7 @@
 
 ## Change log
 
-| Doc Version     |  Software Version  | Note           | date       |   
+| Doc Version     |  Software Version  | Note           | Date       |   
 | --------------- | ------------------ | -------------- | ---------- |
 | 0.0.1           |     0.22.0         |  init version  | 2020-03-10 |
 
