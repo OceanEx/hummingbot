@@ -3,19 +3,8 @@ Docs for hummingbot, the open source crypto market making bot
 
 ## Dependencies
 
-### MkDocs
 ```
-pip install mkdocs
-```
-
-### Material for MkDocs
-```
-pip install mkdocs-material
-```
-
-### PyMdown Extensions
-```
-pip install pymdown-extensions
+pip install -r requirements.txt
 ```
 
 ## Develop
@@ -29,6 +18,3 @@ Go to `http://localhost:8000`
 ```
 mkdocs build
 ```
-
-## Deploy
-Drag the `/site` directory to a Netlify repo

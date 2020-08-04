@@ -58,6 +58,8 @@ from hummingbot.market.trading_rule cimport TradingRule
 from hummingbot.market.liquid.liquid_in_flight_order import LiquidInFlightOrder
 from hummingbot.market.liquid.liquid_in_flight_order cimport LiquidInFlightOrder
 from hummingbot.core.utils.tracking_nonce import get_tracking_nonce
+from hummingbot.client.config.fee_overrides_config_map import fee_overrides_config_map
+from hummingbot.core.utils.estimate_fee import estimate_fee
 
 s_logger = None
 s_decimal_0 = Decimal(0)
@@ -148,7 +150,6 @@ cdef class LiquidMarket(MarketBase):
         self._trading_rules = {}
         self._data_source_type = order_book_tracker_data_source_type
         self._status_polling_task = None
-        self._order_tracker_task = None
         self._user_stream_tracker_task = None
         self._user_stream_event_listener_task = None
         self._product_dict = {}
@@ -255,10 +256,8 @@ cdef class LiquidMarket(MarketBase):
         *required
         Async function used by NetworkBase class to handle when a single market goes online
         """
-        if self._order_tracker_task is not None:
-            self._stop_network()
-
-        self._order_tracker_task = safe_ensure_future(self._order_book_tracker.start())
+        self._stop_network()
+        self._order_book_tracker.start()
         if self._trading_required:
             self._status_polling_task = safe_ensure_future(self._status_polling_loop())
             self._trading_rules_polling_task = safe_ensure_future(self._trading_rules_polling_loop())
@@ -269,15 +268,14 @@ cdef class LiquidMarket(MarketBase):
         """
         Synchronous function that handles when a single market goes offline
         """
-        if self._order_tracker_task is not None:
-            self._order_tracker_task.cancel()
+        self._order_book_tracker.stop()
         if self._status_polling_task is not None:
             self._status_polling_task.cancel()
         if self._user_stream_tracker_task is not None:
             self._user_stream_tracker_task.cancel()
         if self._user_stream_event_listener_task is not None:
             self._user_stream_event_listener_task.cancel()
-        self._order_tracker_task = self._status_polling_task = self._user_stream_tracker_task = \
+        self._status_polling_task = self._user_stream_tracker_task = \
             self._user_stream_event_listener_task = None
 
     async def stop_network(self):
@@ -362,11 +360,19 @@ cdef class LiquidMarket(MarketBase):
         function to calculate fees for a particular order
         :returns: TradeFee class that includes fee percentage and flat fees
         """
+        """
         cdef:
             object maker_fee = Decimal("0.0010")
             object taker_fee = Decimal("0.0010")
 
+        if order_type is OrderType.LIMIT and fee_overrides_config_map["liquid_maker_fee"].value is not None:
+            return TradeFee(percent=fee_overrides_config_map["liquid_maker_fee"].value / Decimal("100"))
+        if order_type is OrderType.MARKET and fee_overrides_config_map["liquid_taker_fee"].value is not None:
+            return TradeFee(percent=fee_overrides_config_map["liquid_taker_fee"].value / Decimal("100"))
         return TradeFee(percent=maker_fee if order_type is OrderType.LIMIT else taker_fee)
+        """
+        is_maker = order_type is OrderType.LIMIT
+        return estimate_fee("liquid", is_maker)
 
     async def _update_balances(self):
         """
@@ -521,7 +527,7 @@ cdef class LiquidMarket(MarketBase):
         for product in products:
             try:
                 trading_pair = product.get("trading_pair")
-                currency = product.get("currency")
+                currency = product.get("base_currency")
 
                 # Find the corresponding rule based on currency
                 rule = trading_rules.get(currency)
@@ -531,8 +537,10 @@ cdef class LiquidMarket(MarketBase):
                     min_order_size = math.pow(10, -rule.get(
                         "assets_precision", Constants.DEFAULT_ASSETS_PRECISION))
 
-                min_price_increment = math.pow(10, -rule.get(
-                    "quoting_precision", Constants.DEFAULT_QUOTING_PRECISION))
+                min_price_increment = product.get("tick_size")
+                if not min_price_increment or min_price_increment == "0.0":
+                    min_price_increment = math.pow(10, -rule.get(
+                        "quoting_precision", Constants.DEFAULT_QUOTING_PRECISION))
 
                 retval.append(TradingRule(trading_pair,
                                           min_price_increment=Decimal(min_price_increment),
@@ -607,13 +615,31 @@ cdef class LiquidMarket(MarketBase):
         for tracked_order in tracked_orders:
             exchange_order_id = await tracked_order.get_exchange_order_id()
             order_update = order_dict.get(str(exchange_order_id))
+            client_order_id = tracked_order.client_order_id
             if order_update is None:
-                self.logger().network(
-                    f"Error fetching status update for the order {tracked_order.client_order_id}: "
-                    f"{order_update}.",
-                    app_warning_msg=f"Could not fetch updates for the order {tracked_order.client_order_id}. "
-                                    f"Check API key and network connection."
-                )
+                try:
+                    order = await self.get_order(client_order_id)
+                except IOError as e:
+                    if "order not found" in str(e).lower():
+                        # The order does not exist. So we should not be tracking it.
+                        self.logger().info(
+                            f"The tracked order {client_order_id} does not exist on Liquid."
+                            f"Order removed from tracking."
+                        )
+                        self.c_stop_tracking_order(client_order_id)
+                        self.c_trigger_event(
+                            self.MARKET_ORDER_CANCELLED_EVENT_TAG,
+                            OrderCancelledEvent(self._current_timestamp, client_order_id)
+                        )
+                except asyncio.CancelledError:
+                    raise
+                except Exception as e:
+                    self.logger().network(
+                        f"Error fetching status update for the order {client_order_id}: ",
+                        exc_info=True,
+                        app_warning_msg=f"Could not fetch updates for the order {client_order_id}. "
+                                        f"Check API key and network connection.{e}"
+                    )
                 continue
 
             order_status = order_update.get("status")
@@ -621,9 +647,8 @@ cdef class LiquidMarket(MarketBase):
             new_confirmed_amount = Decimal(order_update["filled_quantity"])
             execute_amount_diff = new_confirmed_amount - tracked_order.executed_amount_base
             execute_price = s_decimal_0 if new_confirmed_amount == s_decimal_0 \
-                else Decimal(order_update["price"]) / new_confirmed_amount
+                else Decimal(order_update["average_price"])
 
-            client_order_id = tracked_order.client_order_id
             order_type_description = tracked_order.order_type_description
             order_type = OrderType.MARKET if tracked_order.order_type == OrderType.MARKET else OrderType.LIMIT
             # Emit event if executed amount is greater than 0.
@@ -653,7 +678,7 @@ cdef class LiquidMarket(MarketBase):
             # Update the tracked order
             tracked_order.last_state = order_status if order_status in {"filled", "canceled"} else order_update["status"]
             tracked_order.executed_amount_base = new_confirmed_amount
-            tracked_order.executed_amount_quote = Decimal(order_update["price"])
+            tracked_order.executed_amount_quote = Decimal(order_update["average_price"]) * tracked_order.executed_amount_base
             tracked_order.fee_paid = Decimal(order_update["order_fee"])
             if tracked_order.is_done:
                 if not tracked_order.is_failure:
@@ -1037,8 +1062,12 @@ cdef class LiquidMarket(MarketBase):
                 self.c_trigger_event(self.MARKET_ORDER_CANCELLED_EVENT_TAG,
                                      OrderCancelledEvent(self._current_timestamp, order_id))
                 return order_id
+            elif order_status == "filled" and cancelled_id == exchange_order_id:
+                self.logger().info(f"The order {order_id} has already been filled on Liquid. No cancellation needed.")
+                await self._update_order_status()  # We do this to correctly process the order fill and stop tracking.
+                return order_id
         except IOError as e:
-            if "order not found" in e.message:
+            if "order not found" in str(e).lower():
                 # The order was never there to begin with. So cancelling it is a no-op but semantically successful.
                 self.logger().info(f"The order {order_id} does not exist on Liquid. No cancellation needed.")
                 self.c_stop_tracking_order(order_id)
@@ -1049,7 +1078,7 @@ cdef class LiquidMarket(MarketBase):
             raise
         except Exception as e:
             self.logger().network(
-                f"Failed to cancel order {order_id}: {str(e)}",
+                f"Failed to cancel order {order_id}: ",
                 exc_info=True,
                 app_warning_msg=f"Failed to cancel the order {order_id} on Liquid. "
                                 f"Check API key and network connection.{e}"
@@ -1083,11 +1112,16 @@ cdef class LiquidMarket(MarketBase):
                     if type(client_order_id) is str:
                         order_id_set.remove(client_order_id)
                         successful_cancellations.append(CancellationResult(client_order_id, True))
+                    else:
+                        self.logger().warning(
+                            f"Failed to cancel order with error: "
+                            f"{repr(client_order_id)}"
+                        )
         except Exception as e:
             self.logger().network(
                 f"Unexpected error cancelling orders.",
                 exc_info=True,
-                app_warning_msg=f"Failed to cancel order on Liquid. Check API key and network connection.{e}"
+                app_warning_msg=f"Failed to cancel order on Liquid. Check API key and network connection."
             )
 
         failed_cancellations = [CancellationResult(oid, False) for oid in order_id_set]

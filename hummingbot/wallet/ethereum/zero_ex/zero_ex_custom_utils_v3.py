@@ -13,6 +13,15 @@ from zero_ex.order_utils import (
     _parse_signature_hex_as_vrs,
     _parse_signature_hex_as_rsv
 )
+from zero_ex.dev_utils.type_assertions import (
+    assert_is_address,
+    assert_is_hex_string,
+    assert_is_provider,
+)
+from zero_ex.contract_addresses import chain_to_addresses, ChainId
+from zero_ex.contract_wrappers.exchange import Exchange
+from web3.providers.base import BaseProvider
+
 
 class Order(TypedDict):
     makerAddress: str
@@ -29,6 +38,7 @@ class Order(TypedDict):
     takerAssetData: bytes
     makerFeeAssetData: bytes
     takerFeeAssetData: bytes
+
 
 class _Constants:
     """Static data used by order utilities."""
@@ -160,6 +170,47 @@ def generate_order_hash_hex(
         + eip712_order_struct_hash
     ).hex()
 
+
+def is_valid_signature(
+    provider: BaseProvider, data: str, signature: str, signer_address: str, chain_id: int = 1
+) -> bool:
+    """Check the validity of the supplied signature.
+    Check if the supplied `signature`:code: corresponds to signing `data`:code:
+    with the private key corresponding to `signer_address`:code:.
+    :param provider: A Web3 provider able to access the 0x Exchange contract.
+    :param data: The hex encoded data signed by the supplied signature.
+    :param signature: The hex encoded signature.
+    :param signer_address: The hex encoded address that signed the data to
+        produce the supplied signature.
+    :returns: Tuple consisting of a boolean and a string.  Boolean is true if
+        valid, false otherwise.  If false, the string describes the reason.
+    >>> is_valid_signature(
+    ...     Web3.HTTPProvider("http://127.0.0.1:8545"),
+    ...     '0x6927e990021d23b1eb7b8789f6a6feaf98fe104bb0cf8259421b79f9a34222b0',
+    ...     '0x1B61a3ed31b43c8780e905a260a35faefcc527be7516aa11c0256729b5b351bc3340349190569279751135161d22529dc25add4f6069af05be04cacbda2ace225403',
+    ...     '0x5409ed021d9299bf6814279a6a1411a7e866a631',
+    ... )
+    True
+    """  # noqa: E501 (line too long)
+    assert_is_provider(provider, "provider")
+    assert_is_hex_string(data, "data")
+    assert_is_hex_string(signature, "signature")
+    assert_is_address(signer_address, "signer_address")
+
+    return Exchange(
+        provider,
+        chain_to_addresses(
+            ChainId(
+                chain_id  # defaults to always be mainnet
+            )
+        ).exchange,
+    ).is_valid_hash_signature.call(
+        bytes.fromhex(remove_0x_prefix(HexStr(data))),
+        to_checksum_address(signer_address),
+        bytes.fromhex(remove_0x_prefix(HexStr(signature))),
+    )
+
+
 def jsdict_order_to_struct(jsdict: dict) -> Order:
     order = cast(Order, copy(jsdict))
 
@@ -181,11 +232,12 @@ def jsdict_order_to_struct(jsdict: dict) -> Order:
 
     return order
 
+
 def convert_order_to_tuple(order: Order) -> Tuple[str, any]:
-    order_tuple = (order["makerAddress"],
-                   order["takerAddress"],
-                   order["feeRecipientAddress"],
-                   order["senderAddress"],
+    order_tuple = (to_checksum_address(order["makerAddress"]),
+                   to_checksum_address(order["takerAddress"]),
+                   to_checksum_address(order["feeRecipientAddress"]),
+                   to_checksum_address(order["senderAddress"]),
                    int(order["makerAssetAmount"]),
                    int(order["takerAssetAmount"]),
                    int(order["makerFee"]),
@@ -202,7 +254,7 @@ def convert_order_to_tuple(order: Order) -> Tuple[str, any]:
 # fix_signature extracts the logic used for formatting the signature required by the 0x protocol from 0x's custom
 # sign_hash helper.
 # https://github.com/0xProject/0x-monorepo/blob/development/python-packages/order_utils/src/zero_ex/order_utils/__init__.py#L462
-def fix_signature(provider, signer_address, hash_hex, signature) -> str:
+def fix_signature(provider, signer_address, hash_hex, signature, chain_id = 1) -> str:
     valid_v_param_values = [27, 28]
 
     # HACK: There is no consensus on whether the signatureHex string should be
@@ -222,7 +274,12 @@ def fix_signature(provider, signer_address, hash_hex, signature) -> str:
             ).hex()
         )
 
-        return signature_as_vrst_hex
+        valid = is_valid_signature(
+            provider, hash_hex, signature_as_vrst_hex, signer_address, chain_id
+        )
+
+        if valid is True:
+            return signature_as_vrst_hex
 
     ec_signature = _parse_signature_hex_as_vrs(signature)
     if ec_signature["v"] in valid_v_param_values:
@@ -233,7 +290,12 @@ def fix_signature(provider, signer_address, hash_hex, signature) -> str:
             ).hex()
         )
 
-        return signature_as_vrst_hex
+        valid = is_valid_signature(
+            provider, hash_hex, signature_as_vrst_hex, signer_address, chain_id
+        )
+
+        if valid is True:
+            return signature_as_vrst_hex
 
     raise RuntimeError(
         "Signature returned from web3 provider is in an unknown format."

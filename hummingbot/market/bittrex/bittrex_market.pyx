@@ -35,6 +35,8 @@ from hummingbot.market.deposit_info import DepositInfo
 from hummingbot.market.market_base import NaN
 from hummingbot.market.trading_rule cimport TradingRule
 from hummingbot.core.utils.tracking_nonce import get_tracking_nonce
+from hummingbot.client.config.fee_overrides_config_map import fee_overrides_config_map
+from hummingbot.core.utils.estimate_fee import estimate_fee
 
 bm_logger = None
 s_decimal_0 = Decimal(0)
@@ -97,7 +99,6 @@ cdef class BittrexMarket(MarketBase):
         self._order_book_tracker = BittrexOrderBookTracker(data_source_type=order_book_tracker_data_source_type,
                                                            trading_pairs=trading_pairs)
         self._order_not_found_records = {}
-        self._order_tracker_task = None
         self._poll_notifier = asyncio.Event()
         self._poll_interval = poll_interval
         self._shared_client = None
@@ -184,11 +185,19 @@ cdef class BittrexMarket(MarketBase):
                           object price):
         # There is no API for checking fee
         # Fee info from https://bittrex.zendesk.com/hc/en-us/articles/115003684371
+        """
         cdef:
             object maker_fee = Decimal(0.0025)
             object taker_fee = Decimal(0.0025)
+        if order_type is OrderType.LIMIT and fee_overrides_config_map["bittrex_maker_fee"].value is not None:
+            return TradeFee(percent=fee_overrides_config_map["bittrex_maker_fee"].value / Decimal("100"))
+        if order_type is OrderType.MARKET and fee_overrides_config_map["bittrex_taker_fee"].value is not None:
+            return TradeFee(percent=fee_overrides_config_map["bittrex_taker_fee"].value / Decimal("100"))
 
         return TradeFee(percent=maker_fee if order_type is OrderType.LIMIT else taker_fee)
+        """
+        is_maker = order_type is OrderType.LIMIT
+        return estimate_fee("bittrex", is_maker)
 
     async def _update_balances(self):
         cdef:
@@ -231,26 +240,29 @@ cdef class BittrexMarket(MarketBase):
                 precision = market.get("precision")
                 last_trade_rate = Decimal(market.get("lastTradeRate"))
 
-                # min_order_value is the base asset value corresponding to 50,000 Satoshis(~0.0005BTC)
-                # https://bittrex.zendesk.com/hc/en-us/articles/360001473863-Bittrex-Trading-Rules
-                min_order_value = (
-                    min_btc_value / last_trade_rate if market.get("quoteCurrencySymbol") == "BTC" else
-                    min_btc_value / eth_btc_price / last_trade_rate if market.get("quoteCurrencySymbol") == "ETH" else
-                    min_btc_value * btc_usd_price / last_trade_rate if market.get("quoteCurrencySymbol") == "USD" else
-                    min_btc_value * btc_usdt_price / last_trade_rate if market.get("quoteCurrencySymbol") == "USDT" else
-                    min_btc_value
-                ) * Decimal("1.01")  # Compensates for possible fluctuations
+                # skip offline trading pair
+                if market.get("status") != "OFFLINE" :
 
-                # Trading Rules info from Bittrex API response
-                retval.append(TradingRule(trading_pair,
-                                          min_order_size=Decimal(min_trade_size),
-                                          min_price_increment=Decimal(f"1e-{precision}"),
-                                          min_base_amount_increment=Decimal(f"1e-{precision}"),
-                                          min_quote_amount_increment=Decimal(f"1e-{precision}"),
-                                          min_order_value=Decimal(min_order_value),
-                                          ))
-                # https://bittrex.zendesk.com/hc/en-us/articles/360001473863-Bittrex-Trading-Rules
-                # "No maximum, but the user must have sufficient funds to cover the order at the time it is placed."
+                    # min_order_value is the base asset value corresponding to 50,000 Satoshis(~0.0005BTC)
+                    # https://bittrex.zendesk.com/hc/en-us/articles/360001473863-Bittrex-Trading-Rules
+                    min_order_value = (
+                        min_btc_value / last_trade_rate if market.get("quoteCurrencySymbol") == "BTC" else
+                        min_btc_value / eth_btc_price / last_trade_rate if market.get("quoteCurrencySymbol") == "ETH" else
+                        min_btc_value * btc_usd_price / last_trade_rate if market.get("quoteCurrencySymbol") == "USD" else
+                        min_btc_value * btc_usdt_price / last_trade_rate if market.get("quoteCurrencySymbol") == "USDT" else
+                        min_btc_value
+                    ) * Decimal("1.01")  # Compensates for possible fluctuations
+
+                    # Trading Rules info from Bittrex API response
+                    retval.append(TradingRule(trading_pair,
+                                            min_order_size=Decimal(min_trade_size),
+                                            min_price_increment=Decimal(f"1e-{precision}"),
+                                            min_base_amount_increment=Decimal(f"1e-{precision}"),
+                                            min_quote_amount_increment=Decimal(f"1e-{precision}"),
+                                            min_order_value=Decimal(min_order_value),
+                                            ))
+                    # https://bittrex.zendesk.com/hc/en-us/articles/360001473863-Bittrex-Trading-Rules
+                    # "No maximum, but the user must have sufficient funds to cover the order at the time it is placed."
             except Exception:
                 self.logger().error(f"Error parsing the trading pair rule {market}. Skipping.", exc_info=True)
         return retval
@@ -267,6 +279,10 @@ cdef class BittrexMarket(MarketBase):
             market_list = await self._api_request("GET", path_url=market_path_url)
 
             ticker_list = await self._api_request("GET", path_url=ticker_path_url)
+            # A temp fix, Bittrex refers to CELO as CGLD on their tickers end point, but CELO on markets end point.
+            # I think this will be rectified by Bittrex soon.
+            for item in ticker_list:
+                item["symbol"] = item["symbol"].replace("CGLD-", "CELO-")
             ticker_data = {item["symbol"]: item for item in ticker_list}
 
             result_list = [
@@ -312,35 +328,6 @@ cdef class BittrexMarket(MarketBase):
 
         """
         path_url = "/orders/open"
-
-        result = await self._api_request("GET", path_url=path_url)
-        return result
-
-    async def get_order(self, uuid: str) -> Dict[str, Any]:
-        # Used to retrieve a single order by uuid
-        """
-        Result:
-        {
-          "id": "string (uuid)",
-          "marketSymbol": "string",
-          "direction": "string",
-          "type": "string",
-          "quantity": "number (double)",
-          "limit": "number (double)",
-          "ceiling": "number (double)",
-          "timeInForce": "string",
-          "expiresAt": "string (date-time)",
-          "clientOrderId": "string (uuid)",
-          "fillQuantity": "number (double)",
-          "commission": "number (double)",
-          "proceeds": "number (double)",
-          "status": "string",
-          "createdAt": "string (date-time)",
-          "updatedAt": "string (date-time)",
-          "closedAt": "string (date-time)"
-        }
-        """
-        path_url = f"/orders/{uuid}"
 
         result = await self._api_request("GET", path_url=path_url)
         return result
@@ -513,9 +500,7 @@ cdef class BittrexMarket(MarketBase):
                     execute_amount_diff = s_decimal_0
                     tracked_order.fee_paid = Decimal(order["n"])
 
-                    precision = str(self.c_get_order_size_quantum(tracked_order.trading_pair, Decimal(order['q'])))[-1]
-
-                    remaining_size = Decimal(str(round(order["q"], int(precision))))
+                    remaining_size = Decimal(str(order["q"]))
 
                     new_confirmed_amount = Decimal(tracked_order.amount - remaining_size)
                     execute_amount_diff = Decimal(new_confirmed_amount - tracked_order.executed_amount_base)
@@ -629,13 +614,6 @@ cdef class BittrexMarket(MarketBase):
                                       app_warning_msg=f"Could not fetch updates from Bitrrex. "
                                                       f"Check API key and network connection.")
                 await asyncio.sleep(0.5)
-
-    async def get_order(self, client_order_id: str) -> Dict[str, Any]:
-        order = self._in_flight_orders.get(client_order_id)
-        exchange_order_id = await order.get_exchange_order_id()
-        path_url = f"/order/{exchange_order_id}"
-        result = await self._api_request("GET", path_url=path_url)
-        return result
 
     async def get_deposit_address(self, currency: str) -> str:
         path_url = f"/addresses/{currency}"
@@ -973,6 +951,11 @@ cdef class BittrexMarket(MarketBase):
                                      OrderCancelledEvent(self._current_timestamp, order_id))
                 return order_id
 
+            if "ORDER_NOT_OPEN" in str(err):
+                path_url = f"/orders/{order_id}"
+                state_result  = await self._api_request("GET", path_url=path_url)
+                self.logger().info(f"{state_result}")
+
             self.logger().network(
                 f"Failed to cancel order {order_id}: {str(err)}.",
                 exc_info=True,
@@ -1053,25 +1036,22 @@ cdef class BittrexMarket(MarketBase):
         return NetworkStatus.CONNECTED
 
     def _stop_network(self):
-        if self._order_tracker_task is not None:
-            self._order_tracker_task.cancel()
+        self._order_book_tracker.stop()
         if self._status_polling_task is not None:
             self._status_polling_task.cancel()
         if self._user_stream_tracker_task is not None:
             self._user_stream_tracker_task.cancel()
         if self._user_stream_event_listener_task is not None:
             self._user_stream_event_listener_task.cancel()
-        self._order_tracker_task = self._status_polling_task = self._user_stream_tracker_task = \
+        self._status_polling_task = self._user_stream_tracker_task = \
             self._user_stream_event_listener_task = None
 
     async def stop_network(self):
         self._stop_network()
 
     async def start_network(self):
-        if self._order_tracker_task is not None:
-            self._stop_network()
-
-        self._order_tracker_task = safe_ensure_future(self._order_book_tracker.start())
+        self._stop_network()
+        self._order_book_tracker.start()
         self._trading_rules_polling_task = safe_ensure_future(self._trading_rules_polling_loop())
         if self._trading_required:
             self._status_polling_task = safe_ensure_future(self._status_polling_loop())

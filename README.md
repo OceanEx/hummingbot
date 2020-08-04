@@ -59,6 +59,7 @@ We created hummingbot to promote **decentralized market-making**: enabling membe
 |<img src="documentation/docs/assets/img/huobi_logo.png" alt="Huobi Global" width="90" />| huobi | [Huobi Global](https://www.hbg.com) | 1 | [API](https://huobiapi.github.io/docs/spot/v1/en/) | [![Build Status](https://jenkins-02.coinalpha.com/buildStatus/icon?job=hb_test-exchange_huobi&subject=test)](https://jenkins-02.coinalpha.com/job/hb_test-exchange_huobi/) |
 |<img src="documentation/docs/assets/img/bittrex_logo.png" alt="Bittrex Global" width="90" height="30" />| bittrex | [Bittrex Global](https://global.bittrex.com/) | 1 | [API](https://bittrex.github.io/api/v1-1) |
 | <img src="documentation/docs/assets/img/liquid_logo.png" alt="Liquid" width="90" /> | liquid | [Liquid](https://www.liquid.com/) | 2 | [API](https://developers.liquid.com/) |
+| <img src="documentation/docs/assets/img/kucoin_logo.png" alt="KuCoin" width="90" /> | kucoin | [KuCoin](https://www.kucoin.com/) | 1 | [API](https://docs.kucoin.com/#general) |
 |<img src="documentation/docs/assets/img/oceanex.png" alt="OceanEx Global" width="90" height="30" />| oceanex | [OceanEx Global](https://oceanex.pro/en) | * | [API](https://api.oceanex.pro/doc/v1/#introduction) |
 
 ## Supported decentralized exchanges
@@ -66,8 +67,6 @@ We created hummingbot to promote **decentralized market-making**: enabling membe
 | logo | id | name | ver | doc|
 |:---:|:---:|:---:|:---:|:---:|
 | <img src="documentation/docs/assets/img/radar_logo.png" alt="Radar Relay" width="90" height="30" /> | radar_relay | [Radar Relay](https://radarrelay.com/) | 2 | [API](https://developers.radarrelay.com/api/trade-api) | [![Build Status](https://jenkins-02.coinalpha.com/buildStatus/icon?job=hb_test-exchange_radar_relay&subject=test)](https://jenkins-02.coinalpha.com/job/hb_test-exchange_radar_relay/) |
-| <img src="https://i.ibb.co/Lrpps2G/Screen-Shot-2019-03-14-at-10-39-23-AM.png" alt="DDEX" width="90" /> | ddex | [DDEX](https://ddex.io/) | 3 | [API](https://docs.ddex.io/) | [![Build Status](https://jenkins-02.coinalpha.com/buildStatus/icon?job=hb_test-exchange_ddex&subject=test)](https://jenkins-02.coinalpha.com/job/hb_test-exchange_ddex/) |
-| <img src="documentation/docs/assets/img/idex_logo.png" alt="IDEX" width="90" /> | idex | [IDEX](https://idex.market/) | * | [API](https://docs.idex.market/) | |
 
 ## Community contributed exchange connectors
 
@@ -83,25 +82,42 @@ We created hummingbot to promote **decentralized market-making**: enabling membe
 | [Pure market making](https://docs.hummingbot.io/strategies/pure-market-making/) | [![Build Status](https://jenkins-02.coinalpha.com/buildStatus/icon?job=hb_test-strategy_pure_mm&subject=test)](https://jenkins-02.coinalpha.com/job/hb_test-strategy_pure_mm/) |
 | [Cross exchange market making](https://docs.hummingbot.io/strategies/cross-exchange-market-making/) | [![Build Status](https://jenkins-02.coinalpha.com/buildStatus/icon?job=hb_test-strategy_xemm&subject=test)](https://jenkins-02.coinalpha.com/job/hb_test-strategy_xemm/) |
 | [Arbitrage](https://docs.hummingbot.io/strategies/arbitrage/) | [![Build Status](https://jenkins-02.coinalpha.com/buildStatus/icon?job=hb_test-strategy_arbitrage&subject=test)](https://jenkins-02.coinalpha.com/job/hb_test-strategy_arbitrage/) |
-| [Discovery](https://docs.hummingbot.io/strategies/discovery/) | [![Build Status](https://jenkins-02.coinalpha.com/buildStatus/icon?job=hb_test-strategy_discovery&subject=test)](https://jenkins-02.coinalpha.com/job/hb_test-strategy_discovery/) |
 
 ## Getting Started
 
 ### Learn more about Hummingbot
 
-- [Hummingbot website](https://hummingbot.io)
+- [Website](https://hummingbot.io)
 - [Documentation](https://docs.hummingbot.io)
-- [Read our blog](https://www.hummingbot.io/blog)
-- [Whitepaper](https://hummingbot.io/whitepaper.pdf)
 - [FAQs](https://docs.hummingbot.io/faq/)
-- [Roadmap](https://docs.hummingbot.io/roadmap/): including planned features
 
 ### Install Hummingbot
 
-- [Installation guide](https://docs.hummingbot.io/installation/)
+- [Quickstart guide](https://docs.hummingbot.io/quickstart/)
+- [All installation options](https://docs.hummingbot.io/installation/)
 - [Installation scripts](./installation/)
 
-### Using Hmmingbot OceanEx connector  
+### Get support
+- Chat with our support team on [Discord](https://discord.hummingbot.io)
+- Email us at support@hummingbot.io
+
+### Chat with other traders
+- Join our community on [Discord](https://discord.coinalpha.com) or [Reddit](https://www.reddit.com/r/Hummingbot/)
+- Follow Hummingbot on [Twitter](https://twitter.com/hummingbot_io)
+
+## Contributions
+
+We welcome contributions from the community:
+- **Code and documentation contributions** via [pull requests](https://github.com/CoinAlpha/hummingbot/pulls)
+- **Bug reports and feature requests** through [Github issues](https://github.com/CoinAlpha/hummingbot/issues)
+- When contributing, please review the [contributing guidelines](CONTRIBUTING.md)
+
+## About us
+
+Hummingbot was created and is maintained by CoinAlpha, Inc. We are [a global team of engineers and traders](https://hummingbot.io/about/).
+
+- **General**: contact us at [dev@hummingbot.io](mailto:dev@hummingbot.io) or join our [Discord server](https://discord.hummingbot.io).
+- **Business inquiries**: contact us at [partnerships@hummingbot.io](mailto:partnerships@hummingbot.io).
 
 ## Legal
 
