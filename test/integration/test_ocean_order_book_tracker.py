@@ -42,7 +42,7 @@ class OceanOrderBookTrackerUnitTest(unittest.TestCase):
             data_source_type=OrderBookTrackerDataSourceType.EXCHANGE_API,
             trading_pairs=cls.trading_pairs
         )
-        cls.order_book_tracker_task: asyncio.Task = safe_ensure_future(cls.order_book_tracker.start())
+        cls.order_book_tracker.start()
         cls.ev_loop.run_until_complete(cls.wait_til_tracker_ready())
 
     @classmethod
@@ -92,7 +92,7 @@ class OceanOrderBookTrackerUnitTest(unittest.TestCase):
                 order_book.add_listener(event_tag, self.event_logger)
 
     @classmethod
-    async def cause_trades(self, trading_pair: str, trades: int):
+    async def cause_trades(cls, trading_pair: str, trades: int):
         orders = [
             {'market': trading_pair, 'side': 'buy',
              'volume': 1, 'price': 11, 'ord_type': 'limit'},
@@ -127,7 +127,7 @@ class OceanOrderBookTrackerUnitTest(unittest.TestCase):
             self.assertTrue(ob_trade_event.price > 0)
 
     @classmethod
-    async def create_orders(self, trading_pair: str):
+    async def create_orders(cls, trading_pair: str):
         orders = [
             {'market': trading_pair, 'side': 'buy',
              'volume': 1, 'price': 9, 'ord_type': 'limit'},

@@ -229,7 +229,8 @@ global_config_map = {
     "ocean_private_key_file":
         ConfigVar(key="ocean_private_key_file",
                   prompt="Enter your Ocean private key file >>> ",
-                  required_if=using_exchange("ocean")),
+                  required_if=using_exchange("ocean"),
+                  is_connect_key=True),
     "eterbase_api_key":
         ConfigVar(key="eterbase_api_key",
                   prompt="Enter your Eterbase API key >>> ",

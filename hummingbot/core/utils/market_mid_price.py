@@ -4,6 +4,7 @@ from typing import Optional
 import cachetools.func
 from hummingbot.market.binance.binance_market import BinanceMarket
 from hummingbot.market.kraken.kraken_market import KrakenMarket
+from hummingbot.market.ocean.ocean_market import OceanMarket
 
 
 BINANCE_PRICE_URL = "https://api.binance.com/api/v3/ticker/bookTicker"
@@ -12,6 +13,7 @@ LIQUID_PRICE_URL = "https://api.liquid.com/products"
 BITTREX_PRICE_URL = "https://api.bittrex.com/api/v1.1/public/getmarketsummaries"
 KRAKEN_PRICE_URL = "https://api.kraken.com/0/public/Ticker?pair="
 COINBASE_PRO_PRICE_URL = "https://api.pro.coinbase.com/products/TO_BE_REPLACED/ticker"
+OCEAN_PRICE_URL = "https://api.oceanex.pro/v1/tickers"
 
 
 def get_mid_price(exchange: str, trading_pair: str) -> Optional[Decimal]:
@@ -27,6 +29,8 @@ def get_mid_price(exchange: str, trading_pair: str) -> Optional[Decimal]:
         return kraken_mid_price(trading_pair)
     elif exchange == "coinbase_pro":
         return coinbase_pro_mid_price(trading_pair)
+    elif exchange == "ocean":
+        return ocean_mid_price(trading_pair)
     else:
         return binance_mid_price(trading_pair)
 
@@ -102,3 +106,28 @@ def coinbase_pro_mid_price(trading_pair: str) -> Optional[Decimal]:
     if "bid" in record and "ask" in record:
         result = (Decimal(record["bid"]) + Decimal(record["ask"])) / Decimal("2")
         return result
+
+
+@cachetools.func.ttl_cache(ttl=10)
+def ocean_mid_price(trading_pair: str) -> Optional[Decimal]:
+    exch_sym = OceanMarket.convert_to_exchange_trading_pair(trading_pair)
+    url = OCEAN_PRICE_URL + "/" + exch_sym
+    resp = requests.get(url=url)
+    if resp.status_code != 200:
+        return None
+
+    resp_body = resp.json()
+    resp_data = resp_body.get('data')
+    if resp_data is None:
+        return None
+    resp_ticker = resp_data.get('ticker')
+    if resp_ticker is None:
+        return None
+
+    bid: str = resp_ticker.get('buy')
+    ask: str = resp_ticker.get('sell')
+    if bid and ask:
+        mid_price = (Decimal(bid) + Decimal(ask)) / Decimal("2")
+        return mid_price
+    else:
+        return None

@@ -23,6 +23,7 @@ from hummingbot.core.event.events import (
     OrderFilledEvent, OrderCancelledEvent,
     BuyOrderCompletedEvent, SellOrderCompletedEvent)
 from hummingbot.core.utils.trading_pair_fetcher import TradingPairFetcher
+from hummingbot.core.utils.market_mid_price import ocean_mid_price
 from hummingbot.market.ocean.ocean_api_order_book_data_source \
     import OceanAPIOrderBookDataSource
 from hummingbot.market.ocean.ocean_in_flight_order import OceanInFlightOrder
@@ -32,7 +33,7 @@ from hummingbot.market.ocean.ocean_order_book import OceanOrderBook
 from hummingbot.market.trading_rule import TradingRule
 
 
-g_ev_loop = None
+g_ev_loop = asyncio.get_event_loop()
 g_debug: bool = True if 'debug' in os.environ else False
 
 
@@ -148,7 +149,7 @@ class TestOceanAPIOrderBookDataSource(unittest.TestCase):
         self.assertEqual(exp_msgs, got_msgs)
 
     @classmethod
-    async def cause_trades(self, trading_pair: str, trades: int):
+    async def cause_trades(cls, trading_pair: str, trades: int):
         orders = [
             {'market': trading_pair, 'side': 'buy',
              'volume': 1, 'price': 11, 'ord_type': 'limit'},
@@ -562,6 +563,11 @@ class TestRelated(unittest.TestCase):
             self.assertTrue(sep_index > 0, msg)
             self.assertTrue(sep_index < len(name) - 1, msg)
 
+    def test_ocean_mid_price(self):
+        sym = 'BTC-USDT'
+        mid_price = ocean_mid_price(sym)
+        self.assertIsNotNone(mid_price)
+
 
 if __name__ == '__main__':
     if 'log_level' in os.environ:
@@ -573,6 +579,4 @@ if __name__ == '__main__':
     logging.basicConfig(level=level, format=log_format,
                         datefmt='%H:%M:%S')
 
-    g_ev_loop = asyncio.get_event_loop()
     unittest.main()
-    g_ev_loop.close()

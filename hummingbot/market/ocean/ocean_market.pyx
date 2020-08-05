@@ -61,6 +61,7 @@ from hummingbot.market.market_base import (
     NaN,
     s_decimal_NaN)
 from hummingbot.market.ocean.ocean_client import OceanClient
+from hummingbot.core.utils.estimate_fee import estimate_fee
 
 
 hm_logger = None
@@ -219,7 +220,7 @@ cdef class OceanMarket(MarketBase):
     async def start_network(self):
         if self._order_tracker_task is not None:
             self._stop_network()
-        self._order_tracker_task = safe_ensure_future(self._order_book_tracker.start())
+        self._order_book_tracker.start()
         self._trading_rules_polling_task = safe_ensure_future(self._trading_rules_polling_loop())
         if self._trading_required:
             self._status_polling_task = safe_ensure_future(self._status_polling_loop())
@@ -323,6 +324,7 @@ cdef class OceanMarket(MarketBase):
                           object order_side,
                           object amount,
                           object price):
+        """
         cdef:
             object bid_fee = Decimal("0.001")
             object ask_fee = Decimal("0.001")
@@ -333,6 +335,9 @@ cdef class OceanMarket(MarketBase):
         else:
             self.logger().warning(f"Unable to find trade fee for {trading_pair}. Using default 0.1% fee.")
         return TradeFee(percent=bid_fee if order_side is TradeType.BUY else ask_fee)
+        """
+        is_maker = order_type is OrderType.LIMIT
+        return estimate_fee("ocean", is_maker)
 
     async def _update_trading_rules(self):
         cdef:
@@ -740,8 +745,7 @@ cdef class OceanMarket(MarketBase):
                 )
 
         except Exception as e:
-            msg = f"ocean failed to cancel order: order_id={order_id} " + \
-                f"exch_order_id={exch_order_id} response={response}"
+            msg = f"ocean failed to cancel order: order_id={order_id}"
             self.logger().network(
                 f"Failed to cancel order {order_id}: {str(e)}",
                 exc_info=True, app_warning_msg=msg

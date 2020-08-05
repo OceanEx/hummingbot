@@ -1,41 +1,33 @@
-# Hummingbot (OceanEx Fork Version) Introduction
+Readme for fork
+---------------
 
-1. [Change log](#Change-log)
-2. [Introduction](#Introduction)
-3. [Supported centralized exchanges](#Supported-centralized-exchanges)
-4. [Supported decentralized exchanges](#Supported-decentralized-exchanges)
-5. [Community contributed exchange connectors](#Community-contributed-exchange-connectors)
-6. [Currently available strategies](#Currently-available-strategies)
-7. [Getting Started](#Getting-Started)
-   - [Learn more about Hummingbot](#Learn-more-about-Hummingbot)
-   - [Install Hummingbot](#Install-Hummingbot)
-   - [Using Hmmingbot OceanEx connector](#Using-Hmmingbot-OceanEx-connector)
-8. [Legal](#Legal)
-
-
-## Change log
-
-| Doc Version     |  Software Version  | Note           | Date       |   
-| --------------- | ------------------ | -------------- | ---------- |
-| 0.0.1           |     0.22.0         |  init version  | 2020-03-10 |
-
-## Introduction 
-This is a fork extended with an exchange connector for [OceanEx](https://oceanex.pro).
-It is based on version 0.22.0.
+This fork is extended with an exchange connector for [OceanEx](https://oceanex.pro).
+It is based on upstream hummingbot v0.29.0.
 
 Please refer to documentation inside this repo. This is the [index](documentation/docs/index.md).
 The official Hummingbot documentation may contain newer information.
 Refer to this [file](documentation/docs/connectors/oceanex.md) for information about the connector.
 
-For installation, build from source using the manual option steps. Instructions for
-[linux](https://docs.hummingbot.io/installation/from-source/linux/).
-Don't forget to clone this repo instead of upstream Hummingbot repo.
+#### install docker
 
-You can use a docker image from our [repo](https://hub.docker.com/repository/docker/oceanexchange/hummingbot).
-Below is a sample command.
+Images are [here](https://hub.docker.com/repository/docker/oceanexchange/hummingbot).
+Follow the official documentation.
+[e.g.](https://docs.hummingbot.io/installation/docker/linux/) for linux.
+Use manual steps. Replace upstream image "coinalpha/hummingbot:latest" with
+"oceanexchange/hummingbot:latest".
 
-    docker run -it --mount "type=bind,src=$(pwd)/conf,dst=/conf" --mount "type=bind,src=$(pwd)/logs,dst=/logs" --mount "type=bind,src=$(pwd)/data,dst=/data" oceanexchange/hummingbot:0.22.0
+#### install source
 
+Follow the official documentation.
+[e.g.](https://docs.hummingbot.io/installation/source/linux/) for linux.
+Use manual steps. Replace upstream url "https://github.com/CoinAlpha/hummingbot.git"
+with "https://github.com/OceanEx/hummingbot.git".
+
+
+
+Below is upstream hummingbot Readme.
+
+----
 
 ![Hummingbot](https://i.ibb.co/X5zNkKw/blacklogo-with-text.png)
 

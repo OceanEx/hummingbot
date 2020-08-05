@@ -20,7 +20,8 @@ OPTIONS = {
     "kraken",
     "ethereum",
     "eterbase",
-    "celo"
+    "celo",
+    "ocean"
 }
 
 
@@ -47,7 +48,10 @@ class ConnectCommand:
         to_connect = True
         if Security.encrypted_file_exists(exchange_configs[0].key):
             await Security.wait_til_decryption_done()
-            api_key_config = [c for c in exchange_configs if "api_key" in c.key][0]
+            if exchange == 'ocean':
+                api_key_config = [c for c in exchange_configs if c.key == "ocean_uid"][0]
+            else:
+                api_key_config = [c for c in exchange_configs if "api_key" in c.key][0]
             api_key = Security.decrypted_value(api_key_config.key)
             answer = await self.app.prompt(prompt=f"Would you like to replace your existing {exchange} API key "
                                                   f"{api_key} (Yes/No)? >>> ")

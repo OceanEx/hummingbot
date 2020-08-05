@@ -6,6 +6,7 @@ from hummingbot.market.kucoin.kucoin_market import KucoinMarket
 from hummingbot.market.liquid.liquid_market import LiquidMarket
 from hummingbot.market.kraken.kraken_market import KrakenMarket
 from hummingbot.market.eterbase.eterbase_market import EterbaseMarket
+from hummingbot.market.ocean.ocean_market import OceanMarket
 from hummingbot.core.utils.market_mid_price import get_mid_price
 from hummingbot.client.settings import EXCHANGES, DEXES
 from hummingbot.client.config.security import Security
@@ -39,7 +40,8 @@ class UserBalances:
             market = KrakenMarket(api_details[0], api_details[1])
         elif exchange == "eterbase":
             market = EterbaseMarket(api_details[0], api_details[1], api_details[2])
-
+        elif exchange == "ocean":
+            market = OceanMarket(api_details[0], api_details[1])
         return market
 
     # return error message if the _update_balances fails
@@ -72,6 +74,8 @@ class UserBalances:
     async def add_exchange(self, exchange, *api_details) -> Optional[str]:
         self._markets.pop(exchange, None)
         market = UserBalances.connect_market(exchange, *api_details)
+        if exchange == 'ocean':
+            await market.init()
         err_msg = await UserBalances._update_balances(market)
         if err_msg is None:
             self._markets[exchange] = market

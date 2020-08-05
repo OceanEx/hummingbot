@@ -47,6 +47,7 @@ from hummingbot.model.sql_connection_manager import (
     SQLConnectionType
 )
 from hummingbot.model.trade_fill import TradeFill
+from hummingbot.client.config.fee_overrides_config_map import fee_overrides_config_map
 
 # logging.basicConfig(level=METRICS_LOG_LEVEL)
 
@@ -170,18 +171,39 @@ class OceanMarketUnitTest(unittest.TestCase):
         self.assertEqual(limit_fee.percent, market_fee.percent)
         self.assertEqual(limit_fee.percent, sell_trade_fee.percent)
 
-        # different bid and ask fees
-        bid_fee = self.market.get_fee("sha", "vet", OrderType.LIMIT, TradeType.BUY, 1, 1)
-        ask_fee = self.market.get_fee("sha", "vet", OrderType.LIMIT, TradeType.SELL, 1, 1)
-        self.assertGreater(bid_fee.percent, 0)
-        self.assertGreater(ask_fee.percent, 0)
-        self.assertNotEqual(bid_fee.percent, ask_fee.percent)
-
-        # unknown fees
         bid_fee = self.market.get_fee("btc", "vet", OrderType.LIMIT, TradeType.BUY, 1, 1)
         ask_fee = self.market.get_fee("btc", "vet", OrderType.LIMIT, TradeType.SELL, 1, 1)
         self.assertAlmostEqual(bid_fee.percent, Decimal(0.001))
         self.assertAlmostEqual(ask_fee.percent, Decimal(0.001))
+
+    def test_fee_overrides_config(self):
+        configs_before_test = {
+            "ocean_taker_fee": fee_overrides_config_map["ocean_taker_fee"].value,
+            "ocean_maker_fee": fee_overrides_config_map["ocean_maker_fee"].value
+        }
+
+        fee_overrides_config_map["ocean_taker_fee"].value = None
+        taker_fee: TradeFee = self.market.get_fee("LINK", "ETH", OrderType.MARKET, TradeType.BUY, Decimal(1),
+                                                  Decimal('0.1'))
+        self.assertAlmostEqual(Decimal("0.001"), taker_fee.percent)
+
+        fee_overrides_config_map["ocean_taker_fee"].value = Decimal('0.2')
+        taker_fee: TradeFee = self.market.get_fee("LINK", "ETH", OrderType.MARKET, TradeType.BUY, Decimal(1),
+                                                  Decimal('0.1'))
+        self.assertAlmostEqual(Decimal("0.002"), taker_fee.percent)
+
+        fee_overrides_config_map["ocean_maker_fee"].value = None
+        maker_fee: TradeFee = self.market.get_fee("LINK", "ETH", OrderType.LIMIT, TradeType.BUY, Decimal(1),
+                                                  Decimal('0.1'))
+        self.assertAlmostEqual(Decimal("0.001"), maker_fee.percent)
+
+        fee_overrides_config_map["ocean_maker_fee"].value = Decimal('0.4')
+        maker_fee: TradeFee = self.market.get_fee("LINK", "ETH", OrderType.LIMIT, TradeType.BUY, Decimal(1),
+                                                  Decimal('0.1'))
+        self.assertAlmostEqual(Decimal("0.004"), maker_fee.percent)
+
+        fee_overrides_config_map["ocean_taker_fee"].value = configs_before_test["ocean_taker_fee"]
+        fee_overrides_config_map["ocean_maker_fee"].value = configs_before_test["ocean_maker_fee"]
 
     def test_limit_buy(self):
         self.create_order_book(2)
@@ -256,7 +278,7 @@ class OceanMarketUnitTest(unittest.TestCase):
     def test_market_buy(self):
         self.create_order_book(2)
         trading_pair = "btcusdt"
-        amount: Decimal = Decimal("0.01")
+        amount: Decimal = Decimal("1")  # in quote currency
         quantized_amount: Decimal = self.market.quantize_order_amount(trading_pair, amount)
         order_id = self.market.buy(trading_pair, quantized_amount, OrderType.MARKET)
 
@@ -286,7 +308,7 @@ class OceanMarketUnitTest(unittest.TestCase):
     def test_market_sell(self):
         self.create_order_book(2)
         trading_pair = "btcusdt"
-        amount: Decimal = Decimal("0.01")
+        amount: Decimal = Decimal("1")
         quantized_amount: Decimal = self.market.quantize_order_amount(trading_pair, amount)
         order_id = self.market.sell(trading_pair, amount, OrderType.MARKET, 0)
 
@@ -318,7 +340,7 @@ class OceanMarketUnitTest(unittest.TestCase):
         trading_pair = "btcusdt"
         current_bid_price: Decimal = self.market.get_price(trading_pair, True)
         self.assertFalse(current_bid_price.is_nan())
-        amount: Decimal = Decimal("0.02")
+        amount: Decimal = Decimal("1")
 
         bid_price: Decimal = current_bid_price - Decimal("0.1") * current_bid_price
         quantize_bid_price: Decimal = self.market.quantize_order_price(trading_pair, bid_price)
@@ -342,7 +364,7 @@ class OceanMarketUnitTest(unittest.TestCase):
         self.assertFalse(bid_price.is_nan())
         ask_price: Decimal = self.market.get_price(trading_pair, False) * 2
         self.assertFalse(ask_price.is_nan())
-        amount: Decimal = Decimal("0.05")
+        amount: Decimal = Decimal("1")
         quantized_amount: Decimal = self.market.quantize_order_amount(trading_pair, amount)
 
         # Intentionally setting invalid price to prevent getting filled
@@ -371,13 +393,13 @@ class OceanMarketUnitTest(unittest.TestCase):
         try:
             self.assertEqual(0, len(self.market.tracking_states))
 
-            # Try to put limit buy order for 0.04 and watch for order creation event.
+            # Try to limit buy order and watch for order creation event.
             current_bid_price: Decimal = self.market.get_price(trading_pair, True)
             self.assertFalse(current_bid_price.is_nan())
             bid_price: Decimal = current_bid_price * Decimal("0.8")
             quantize_bid_price: Decimal = self.market.quantize_order_price(trading_pair, bid_price)
 
-            amount: Decimal = Decimal("0.04")
+            amount: Decimal = Decimal("1")
             quantized_amount: Decimal = self.market.quantize_order_amount(trading_pair, amount)
 
             order_id = self.market.buy(trading_pair, quantized_amount, OrderType.LIMIT, quantize_bid_price)
@@ -456,8 +478,8 @@ class OceanMarketUnitTest(unittest.TestCase):
         self.create_order_book(2)
 
         try:
-            # Try to buy 0.04 from the exchange, and watch for completion event.
-            amount: Decimal = Decimal("0.04")
+            # Try to buy from the exchange, and watch for completion event.
+            amount: Decimal = Decimal("1")
             order_id = self.market.buy(trading_pair, amount)
             [buy_order_completed_event] = self.run_parallel(
                 self.market_logger.wait_for(BuyOrderCompletedEvent, 10))
