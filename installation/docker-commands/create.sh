@@ -11,11 +11,11 @@ echo
 # Specify hummingbot version
 echo "ℹ️  Press [enter] for default values."
 echo
-echo "➡️  Enter Hummingbot version: [0.22.0] (default = \"0.22.0\")"
+echo "➡️  Enter Hummingbot version: [0.29.0] (default = \"0.29.0\")"
 read TAG
 if [ "$TAG" == "" ]
 then
-  TAG=0.22.0
+  TAG="latest"
 fi
 echo
 # Ask the user for the name of the new instance
