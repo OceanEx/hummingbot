@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "hummingbot.fullname" . }}-global
+  labels:
+    {{- include "hummingbot.labels" . | nindent 4 }}
+data:
+  conf_global.yaml: |-
+  {{- include (print $.Template.BasePath "/_conf_global.yaml") . | nindent 4 }}

@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "hummingbot.fullname" . }}-logs
+  labels:
+    {{- include "hummingbot.labels" . | nindent 4 }}
+data:
+  hummingbot_logs.yaml: |-
+  {{- include (print $.Template.BasePath "/_hummingbot_logs.yaml") . | nindent 4 }}
