@@ -1,10 +1,11 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: {{ include "hummingbot.fullname" . }}
   labels:
     {{- include "hummingbot.labels" . | nindent 4 }}
 spec:
+  serviceName: {{ include "hummingbot.fullname" . }}
 {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
 {{- end }}
@@ -40,6 +41,10 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command:
+            - /bin/bash
+            - -c 
+            - tail -f /dev/null
           ports:
             - name: http
               containerPort: 80
@@ -51,14 +56,12 @@ spec:
             - name: {{ include "hummingbot.fullname" . }}-logs
               mountPath: /conf/hummingbot_logs.yaml
               subPath: hummingbot_logs.yaml
-          livenessProbe:
-            httpGet:
-              path: /
-              port: http
-          readinessProbe:
-            httpGet:
-              path: /
-              port: http
+            - name: hummingbot-pvc-data
+              mountPath: /data
+            - name: hummingbot-pvc-logs
+              mountPath: /logs
+            - name: hummingbot-pvc-scripts
+              mountPath: /scripts
           env:
             {{- include "hummingbot.env" . | indent 12 }}
           resources:
@@ -75,3 +78,34 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+  volumeClaimTemplates:
+    - metadata:
+        name: hummingbot-pvc-logs
+      spec:
+        accessModes:
+        - {{ .Values.persistence.accessMode }}
+        storageClassName: "{{ .Values.persistence.storageClass }}"
+        resources:
+          requests:
+            storage: {{ .Values.persistence.logs.size }}
+        volumeMode: Filesystem
+    - metadata:
+        name: hummingbot-pvc-data
+      spec:
+        accessModes:
+        - {{ .Values.persistence.accessMode }}
+        storageClassName: "{{ .Values.persistence.storageClass }}"
+        resources:
+          requests:
+            storage: {{ .Values.persistence.data.size }}
+        volumeMode: Filesystem
+    - metadata:
+        name: hummingbot-pvc-scripts
+      spec:
+        accessModes:
+        - {{ .Values.persistence.accessMode }}
+        storageClassName: "{{ .Values.persistence.storageClass }}"
+        resources:
+          requests:
+            storage: {{ .Values.persistence.scripts.size }}
+        volumeMode: Filesystem

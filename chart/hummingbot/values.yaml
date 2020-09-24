@@ -5,13 +5,13 @@
 replicaCount: 1
 
 image:
-  repository: ocenaex/hummingbot
+  repository: oceanex/hummingbot
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
 
-app.vars:
-  
+app:
+  vars: {}
 
 imagePullSecrets: []
 nameOverride: ""
@@ -38,6 +38,17 @@ securityContext: {}
   # readOnlyRootFilesystem: true
   # runAsNonRoot: true
   # runAsUser: 1000
+
+persistence:
+  enabled: true
+  storageClass: "standard"
+  accessMode: ReadWriteOnce
+  logs:
+    size: "1Gi"
+  data:
+    size: "1Gi"  
+  scripts:
+    size: "1Gi"
 
 service:
   type: ClusterIP
