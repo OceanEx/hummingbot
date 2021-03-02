@@ -9,7 +9,7 @@
      * [Docker](#Docker) 
      * [Source](#Source) 
  * [Config](#Config)
-     * [Create a new password(#Create-a-new-password)
+     * [Create a new password](#Create-a-new-password)
  * [Run](#Run)
  * [Support](Support)
 <!--te-->
