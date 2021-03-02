@@ -6,18 +6,12 @@
      * [Documentation History](#Documentation-History)
  * [Installation](Installation)
      * [Overview](#Overview)
-     * [Docker](#Docker)
-         * [Linux Installation Using Docker](#Linux-Installation-Using-Docker）
-         * [Docker](#Ubuntu)
-         * [Debian](#Debian)
-         * [CentOS](#CentOS)
- * [Work Flow](#Work-Flow)
-     * [Create New Order](#Create-New-Order)
-     * [Scan Transaction](#Deposit-Transaction)
-     * [Notify Status](#Notify-Status)
-     * [Collection](#Collection)
- * [Pyament Order States](#Payment-Order-States)
- * [Database Design](doc/database.md)
+     * [Docker](#Docker) 
+     * [Source](#Source) 
+ * [Config](#Config)
+     * [Create a new password(#Create-a-new-password)
+ * [Run](#Run)
+ * [Support](Support)
 <!--te-->
 
 
