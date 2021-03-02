@@ -3,8 +3,14 @@
  * [Introduction](#Introduction)
      * [Overview](#Overview)
      * [OceanEx Fork Version](#OceanEx-Fork-Version)
-     * [Change Log](#Change-Log)
- * [API Documentation](doc/api.md)
+     * [Documentation History](#Documentation-History)
+ * [Installation](Installation)
+     * [Overview](#Overview)
+     * [Docker](#Docker)
+         * [Linux Installation Using Docker](#Linux-Installation-Using-Docker）
+         * [Docker](#Ubuntu)
+         * [Debian](#Debian)
+         * [CentOS](#CentOS)
  * [Work Flow](#Work-Flow)
      * [Create New Order](#Create-New-Order)
      * [Scan Transaction](#Deposit-Transaction)
@@ -27,13 +33,13 @@ The Hummingbot source code can be downloaded through Hummingbot official github 
 
 Hummingbot supports a few number of exchanges. OceanEx was not a part of them. To enable trading through Hummingbot, OceanEx decided to fork from 0.29.0 version of Hummingbot and implemented the OceanEx connector. OceanEx published their own fork Hummingbot version at github, see the link .
 
-### Change Log
+### Documentation History
 
 | Version              | date       |   Author   | Description     | 
 | ------------------   | ---------  | ---------- | ------------    |
 | 0.1                  | 2021-03-02 | Technology | Initial version |
 
-## Collection
+## Installation
 
 When payment order is not longer active. The post deposit daemon start to collect the coins from order payment address and move them to target dest address. The dest address is definied at system_wallets.
 
