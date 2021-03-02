@@ -6,14 +6,24 @@
      * [Documentation History](#Documentation-History)
  * [Installation](Installation)
      * [Overview](#Overview)
-     * [Docker](#Docker) 
+     * [Docker](#Docker)
+       * [Linux Installation Using Docker](#Linux-Installation-Using-Docker) 
+         * [Ubuntu](#Ubuntu)
+         * [Debian](#Debian)
+         * [CentOS](#CentOS)
+       * [MacOS Installation Using Docker](#MacOS-Installation-Using-Docker) 
+       * [Windows Installation Using Docker](#Windows-Installation-Using-Docker) 
      * [Source](#Source) 
+       * [Linux Source Installation(#Linux-Source-Installation) 
+         * [Ubuntu](#Ubuntu)
+         * [Debian](#Debian)
+         * [CentOS](#CentOS)
+       * [MacOS Source Installation](#MacOS-Source-Installation 
  * [Config](#Config)
      * [Create a new password](#Create-a-new-password)
  * [Run](#Run)
  * [Support](Support)
 <!--te-->
-
 
 ## Introduction
 
@@ -33,16 +43,21 @@ Hummingbot supports a few number of exchanges. OceanEx was not a part of them. T
 | ------------------   | ---------  | ---------- | ------------    |
 | 0.1                  | 2021-03-02 | Technology | Initial version |
 
+
 ## Installation
 
-When payment order is not longer active. The post deposit daemon start to collect the coins from order payment address and move them to target dest address. The dest address is definied at system_wallets.
+### Overview
 
-## Payment Order States 
+### Docker
 
-**active**
+#### Linux Installation Using Docker
 
-A order is waiting for one or mulitple transasctions to fill requested amount before it is expired. 
+##### Ubuntu
 
-**expired** 
+##### Debian
 
-A order closed when running out of given period.
+##### CentOS
+
+#### MacOS Installation Using Docker
+
+#### Windows Installation Using Docker 
