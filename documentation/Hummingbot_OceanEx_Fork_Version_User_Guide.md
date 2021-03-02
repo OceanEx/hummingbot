@@ -14,7 +14,7 @@
        * [MacOS Installation Using Docker](#MacOS-Installation-Using-Docker) 
        * [Windows Installation Using Docker](#Windows-Installation-Using-Docker) 
      * [Source](#Source) 
-       * [Linux Source Installation(#Linux-Source-Installation) 
+       * [Linux Source Installation](#Linux-Source-Installation) 
          * [Ubuntu](#Ubuntu)
          * [Debian](#Debian)
          * [CentOS](#CentOS)
@@ -48,13 +48,50 @@ Hummingbot supports a few number of exchanges. OceanEx was not a part of them. T
 
 ### Overview
 
+Installing Hummingbot is simple. The original version of Hummingbot supports installation with executable files in .exe format for Windows and .dmg format for MacOS. Refer to the Hummingbot installation link . However, the OceanEx fork version of Hummingbot DOES NOT have Windows and MacOS installation executable files. It only supports installation via Docker and Source build.
+
 ### Docker
 
 #### Linux Installation Using Docker
 
 ##### Ubuntu
 
+* Step 1: Install Docker
+
+Skip those Linux steps if you already have docker installed. Run the following commands:
+
+```
+# 1) Download Docker install script
+wget https://raw.githubusercontent.com/CoinAlpha/hummingbot/development/installation/install-docker/install-docker-ubuntu.sh
+
+# 2) Enable script permissions
+chmod a+x install-docker-ubuntu.sh
+
+# 3) Run installation
+./install-docker-ubuntu.sh
+
+```
+* Step 2: Install Hummingbot
+
+Run the following commands:
+
+```
+# 1) Download Hummingbot install, start, and update script
+wget https://raw.githubusercontent.com/OceanEx/hummingbot/master/installation/docker-commands/create.sh
+
+wget https://raw.githubusercontent.com/OceanEx/hummingbot/master/installation/docker-commands/start.sh
+
+# 2) Enable script permissions
+chmod a+x *.sh
+
+# 3) Create a hummingbot instance
+./create.sh
+```
+
 ##### Debian
+
+```
+```
 
 ##### CentOS
 
