@@ -19,9 +19,8 @@
          * [Debian](#Debian-Source)
          * [CentOS](#CentOS-Source)
        * [MacOS Source Installation](#MacOS-Source-Installation)
- * [Config](#Config)
-     * [Create a new password](#Create-a-new-password)
  * [Run](#Run)
+    * [Create a new password](#Create-a-new-password)
  * [Support](Support)
 <!--te-->
 
@@ -261,4 +260,11 @@ chmod a+x install-source-macOS.sh
 # 3) Run installation
 ./install-source-macOS.sh
 ```
+## Run 
+
+once trigger ```create.sh``` or ```start.sh```, you will see the hummingbot panel as below.  
+![image](https://user-images.githubusercontent.com/8203219/109872866-fe389300-7c3a-11eb-8492-3c7606c12fcf.png)
+
+
+### Create a new password
 
