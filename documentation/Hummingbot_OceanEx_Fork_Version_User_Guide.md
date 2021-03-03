@@ -90,11 +90,115 @@ chmod a+x *.sh
 
 ##### Debian
 
+* Step 1: Install Docker
+
+Skip those steps if you already have docker installed. Run the following commands:
+
 ```
+# 1) Download Docker install script
+wget https://raw.githubusercontent.com/CoinAlpha/hummingbot/development/installation/install-docker/install-docker-debian.sh
+
+# 2) Enable script permissions
+chmod a+x install-docker-debian.sh
+
+# 3) Run installation
+./install-docker-debian.sh
+
+```
+* Step 2: Install Hummingbot
+
+Run the following commands:
+```
+# 1) Download Hummingbot install, start, and update script
+wget https://raw.githubusercontent.com/OceanEx/hummingbot/master/installation/docker-commands/create.sh
+
+wget https://raw.githubusercontent.com/OceanEx/hummingbot/master/installation/docker-commands/start.sh
+
+# 2) Enable script permissions
+chmod a+x *.sh
+
+# 3) Create a hummingbot instance
+./create.sh
 ```
 
 ##### CentOS
 
+
+* Step 1: Install Docker
+
+Skip those steps if you already have docker installed. Run the following commands:
+
+```
+# 1) Download Docker install script
+wget https://raw.githubusercontent.com/CoinAlpha/hummingbot/development/installation/install-docker/install-docker-centos.sh
+
+# 2) Enable script permissions
+chmod a+x install-docker-centos.sh
+
+# 3) Run installation
+./install-docker-centos.sh
+```
+
+* Step 2: Install Hummingbot
+
+Run the following commands:
+```
+# 1) Download Hummingbot install, start, and update script
+wget https://raw.githubusercontent.com/OceanEx/hummingbot/master/installation/docker-commands/create.sh
+
+wget https://raw.githubusercontent.com/OceanEx/hummingbot/master/installation/docker-commands/start.sh
+
+# 2) Enable script permissions
+chmod a+x *.sh
+
+# 3) Create a hummingbot instance
+./create.sh
+```
+
 #### MacOS Installation Using Docker
 
+* Step 1: Install Docker
+
+Install docker from the official page.
+
+* Step 2: Install Hummingbot
+
+```
+# 1) Download Hummingbot install script
+curl https://raw.githubusercontent.com/OceanEx/hummingbot/master/installation/docker-commands/create.sh -o create.sh
+
+# 2) Enable script permissions
+chmod a+x create.sh
+
+# 3) Run installation
+./create.sh
+```
+
+
 #### Windows Installation Using Docker 
+
+* Step 1: Install Docker
+
+Install Docker Toolbox from this guide . And please only follow the guide for Step 1. Install
+Docker Toolbox . Stop at Step 2 and use the guide as below.
+
+* Step 2: Install Hummingbot
+
+Open Docker Quickstart Terminal. Enter following commands in the terminal
+
+```
+# 1) Navigate to root folder
+cd ~
+
+# 2) Download Hummingbot install script
+curl https://raw.githubusercontent.com/OceanEx/hummingbot/master/installation/docker-commands/create.sh -o create.sh
+
+curl https://raw.githubusercontent.com/OceanEx/hummingbot/master/installation/docker-commands/start.sh -o start.sh
+
+# 3) Enable script permissions
+chmod a+x create.sh
+chmod a+x start.sh
+
+# 4) Run installation
+./create.sh
+```
