@@ -15,7 +15,7 @@ echo "➡️  Enter Hummingbot version: [0.29.0] (default = \"0.29.0\")"
 read TAG
 if [ "$TAG" == "" ]
 then
-  TAG="latest"
+  TAG="0.29.0"
 fi
 echo
 # Ask the user for the name of the new instance
