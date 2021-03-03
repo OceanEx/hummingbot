@@ -1,3 +1,4 @@
+![image](https://user-images.githubusercontent.com/8203219/109872974-20321580-7c3b-11eb-8f60-4c3c042a1ee2.png)
 # Hummingbot OceanEx Fork Version User Guide
  <!--ts-->
  * [Introduction](#Introduction)
