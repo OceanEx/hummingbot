@@ -18,7 +18,7 @@
          * [Ubuntu](#Ubuntu)
          * [Debian](#Debian)
          * [CentOS](#CentOS)
-       * [MacOS Source Installation](#MacOS-Source-Installation 
+       * [MacOS Source Installation](#MacOS-Source-Installation)
  * [Config](#Config)
      * [Create a new password](#Create-a-new-password)
  * [Run](#Run)
@@ -202,3 +202,63 @@ chmod a+x start.sh
 # 4) Run installation
 ./create.sh
 ```
+
+### Source
+
+#### Linux Source Installation
+
+##### Ubuntu
+
+```
+# 1) Download install script
+wget https://raw.githubusercontent.com/OceanEx/hummingbot/master/installation/install-from-source/install-source-ubuntu.sh
+
+# 2) Enable script permissions
+chmod a+x install-source-ubuntu.sh
+
+# 3) Run installation
+./install-source-ubuntu.sh
+```
+
+##### Debian
+
+```
+# 1) Download install script
+wget https://raw.githubusercontent.com/OceanEx/hummingbot/master/installation/install-from-source/install-source-debian.sh
+
+# 2) Enable script permissions
+chmod a+x install-source-debian.sh
+
+# 3) Run installation
+./install-source-debian.sh
+```
+
+##### CentOS
+
+```
+# 1) Download install script
+wget https://raw.githubusercontent.com/OceanEx/hummingbot/master/installation/install-from-source/install-source-centos.sh
+
+# 2) Enable script permissions
+chmod a+x install-source-centos.sh
+
+# 3) Run installation
+./install-source-centos.sh
+```
+
+#### MacOS Source Installation
+
+Refer to Humingbot origin link to install env in Part 1 section.
+When installing Part 2, please replaced with following scripts.
+
+```
+# 1) Download Hummingbot install script
+curl https://raw.githubusercontent.com/OceanEx/hummingbot/master/installation/install-from-source/install-source-macOS.sh -o install-source-macOS.sh
+
+# 2) Enable script permissions
+chmod a+x install-source-macOS.sh
+
+# 3) Run installation
+./install-source-macOS.sh
+```
+
