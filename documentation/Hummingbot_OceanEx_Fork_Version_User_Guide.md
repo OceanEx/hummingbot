@@ -15,9 +15,9 @@
        * [Windows Installation Using Docker](#Windows-Installation-Using-Docker) 
      * [Source](#Source) 
        * [Linux Source Installation](#Linux-Source-Installation) 
-         * [Ubuntu](#Ubuntu)
-         * [Debian](#Debian)
-         * [CentOS](#CentOS)
+         * [Ubuntu](#Ubuntu-Source)
+         * [Debian](#Debian-Source)
+         * [CentOS](#CentOS-Source)
        * [MacOS Source Installation](#MacOS-Source-Installation)
  * [Config](#Config)
      * [Create a new password](#Create-a-new-password)
@@ -207,7 +207,7 @@ chmod a+x start.sh
 
 #### Linux Source Installation
 
-##### Ubuntu
+##### Ubuntu Source
 
 ```
 # 1) Download install script
@@ -220,7 +220,7 @@ chmod a+x install-source-ubuntu.sh
 ./install-source-ubuntu.sh
 ```
 
-##### Debian
+##### Debian Source
 
 ```
 # 1) Download install script
@@ -233,7 +233,7 @@ chmod a+x install-source-debian.sh
 ./install-source-debian.sh
 ```
 
-##### CentOS
+##### CentOS Source
 
 ```
 # 1) Download install script
