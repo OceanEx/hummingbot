@@ -20,7 +20,7 @@
          * [Debian](#Debian-Source)
          * [CentOS](#CentOS-Source)
        * [MacOS Source Installation](#MacOS-Source-Installation)
- * [Run](#Run)
+ * [Run Hummingbot with OceanEx Connector](#Run-Hummingbot-with-OceanEx-Connector)
     * [Create a new password](#Create-a-new-password)
  * [Support](Support)
 <!--te-->
@@ -261,7 +261,7 @@ chmod a+x install-source-macOS.sh
 # 3) Run installation
 ./install-source-macOS.sh
 ```
-## Run 
+## Run Hummingbot with OceanEx Connector
 
 once trigger ```create.sh``` or ```start.sh```, you will see the hummingbot panel as below.  
 ![image](https://user-images.githubusercontent.com/8203219/109872866-fe389300-7c3a-11eb-8492-3c7606c12fcf.png)
@@ -283,7 +283,7 @@ hit 'Tab' key to see all the config options.
 
 ### Config
 
-chose 'create' from menu to start set up a OceanEx connector. 
+chose 'create' from menu to set up a OceanEx connector. 
 
 * Chose strategy
 
@@ -291,7 +291,68 @@ for more details about different kinds of strategies. please check hummingbot of
 
 ![image](https://user-images.githubusercontent.com/8203219/109878766-b289e780-7c42-11eb-9136-3dab726c85d1.png)
 
-let's use *pure_market_making* strategy as example
+let's use *pure_market_making* strategy as example, chose 'ocean' as OceanEx connector. chose markets pair.
+
+![image](https://user-images.githubusercontent.com/8203219/109903289-9f3e4280-7c69-11eb-89e6-144e283f8a6a.png)
+
+The Hummingbot will ask you some questions to complete configuration set up. The configuration item could be explained here. https://docs.hummingbot.io/strategies/pure-market-making/ 
+
+
+### Connect to OceanEx
+
+once you have completed the *pure_market_making* setup, you need to set up your api key infomation. You will be back to the main menu. chose 'connect'. 
+![image](https://user-images.githubusercontent.com/8203219/109903912-736f8c80-7c6a-11eb-8421-bf3ef4a495fd.png)
+ 
+
+type 'connect' and give 'space'. you will see exchange list comming out.
+
+![image](https://user-images.githubusercontent.com/8203219/109904098-b893be80-7c6a-11eb-9432-e72025385b62.png)
+
+
+enter your uuid and api_key path 
+
+
+![image](https://user-images.githubusercontent.com/8203219/109904167-d2350600-7c6a-11eb-92af-b4e4e416c831.png)
+
+![image](https://user-images.githubusercontent.com/8203219/109904284-fe508700-7c6a-11eb-8c9f-db0b919d28bf.png)
+
+Where is my uid at OceanEx ?
+
+![image](https://user-images.githubusercontent.com/8203219/109904815-d281d100-7c6b-11eb-9424-760fc9dcac8e.png)
+
+![image](https://user-images.githubusercontent.com/8203219/109904835-d9a8df00-7c6b-11eb-8d30-ba55737eb91e.png)
+
+
+
+Make sure copy your private api key (let’s say file name is key.pem) to
+```
+<path of where you run script>/hummingbot_files/hummingbot_conf directory
+```
+Note: hummingbot maps <path of where you run script>/hummingbot_files/hummingbot_conf to docker container /conf. The input for the
+command line must be /conf .
+
+```
+Enter your Ocean Private key file >>> /conf/key.pem
+```
+
+### start 
+
+
+If you pass all the configuration set up, you should see the prompt below. And simply type 'start' to turn on the trading bot.
+
+![image](https://user-images.githubusercontent.com/8203219/109904742-ad8d5e00-7c6b-11eb-92a0-eea8a2a5e121.png)
+
+Once started successful, you should see the logs on the right side. If it failed with errors, the error reason will both be shown at logs at right and command prompts at left.
+
+
+
+![image](https://user-images.githubusercontent.com/8203219/109904853-e299b080-7c6b-11eb-9cec-fd0abf0984a5.png)
+
+
+You could review your order at OceanEx .
+
+
+![image](https://user-images.githubusercontent.com/8203219/109904904-f0e7cc80-7c6b-11eb-9012-157630688173.png)
 
 
 
