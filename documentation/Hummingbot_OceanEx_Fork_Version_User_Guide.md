@@ -189,8 +189,7 @@ Docker Toolbox . Stop at Step 2 and use the guide as below.
 
 * Step 2: Install Hummingbot
 
-![image](https://user-images.githubusercontent.com/8203219/109906282-30171d00-7c6e-11eb-81f0-a8e1d14ac3df.png)
-
+![image](https://user-images.githubusercontent.com/8203219/109906919-4376b800-7c6f-11eb-89cb-0a77eb6d769c.png)
 
 ```
 # 1) Navigate to root folder
