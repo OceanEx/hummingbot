@@ -36,11 +36,11 @@
 
 Hummingbot is an open-source project aimed to help users, traders and exchanges to build different trading strategies and run those strategies on the top of cryptocurrency exchange platforms.
 
-The Hummingbot source code can be downloaded through Hummingbot official github project. The full details of documentation is available from [Hummingbot official website](https://github.com/CoinAlpha/hummingbot).
+The Hummingbot source code can be downloaded through [Hummingbot official github project](https://github.com/CoinAlpha/hummingbot). The full details of documentation is available from [Hummingbot official website](https://docs.hummingbot.io).
 
 ### OceanEx Fork Version
 
-Hummingbot supports a few number of exchanges. OceanEx was not a part of them. To enable trading through Hummingbot, OceanEx decided to fork from 0.29.0 version of Hummingbot and implemented the OceanEx connector. OceanEx published their own fork Hummingbot version at github, see the link .
+Hummingbot supports a few number of exchanges. OceanEx was not a part of them. To enable trading through Hummingbot, OceanEx decided to fork from 0.29.0 version of Hummingbot and implemented the OceanEx connector. OceanEx published their own fork Hummingbot version at github, see the [link](https://github.com/OceanEx/hummingbot) .
 
 ### Documentation History
 
@@ -53,7 +53,7 @@ Hummingbot supports a few number of exchanges. OceanEx was not a part of them. T
 
 ### Overview
 
-Installing Hummingbot is simple. The original version of Hummingbot supports installation with executable files in .exe format for Windows and .dmg format for MacOS. Refer to the Hummingbot installation link . However, the OceanEx fork version of Hummingbot DOES NOT have Windows and MacOS installation executable files. It only supports installation via Docker and Source build.
+Installing Hummingbot is simple. The original version of Hummingbot supports installation with executable files in .exe format for Windows and .dmg format for MacOS. Refer to the Hummingbot [installation link](https://hummingbot.io/download/). However, the OceanEx fork version of Hummingbot **DOES NOT** have Windows and MacOS installation executable files. It only supports installation via Docker and Source build.
 
 ### Docker
 
@@ -164,7 +164,7 @@ chmod a+x *.sh
 
 * Step 1: Install Docker
 
-Install docker from the official page.
+Install docker from the [official page](https://docs.hummingbot.io/installation/mac/#install-via-docker).
 
 * Step 2: Install Hummingbot
 
@@ -184,12 +184,13 @@ chmod a+x create.sh
 
 * Step 1: Install Docker
 
-Install Docker Toolbox from this guide . And please only follow the guide for Step 1. Install
+Install Docker Toolbox from [this guide](https://docs.hummingbot.io/installation/windows/#install-via-docker) . And please only follow the guide for Step 1. Install
 Docker Toolbox . Stop at Step 2 and use the guide as below.
 
 * Step 2: Install Hummingbot
 
-Open Docker Quickstart Terminal. Enter following commands in the terminal
+![image](https://user-images.githubusercontent.com/8203219/109906282-30171d00-7c6e-11eb-81f0-a8e1d14ac3df.png)
+
 
 ```
 # 1) Navigate to root folder
@@ -300,7 +301,7 @@ let's use *pure_market_making* strategy as example, chose 'ocean' as OceanEx con
 
 ![image](https://user-images.githubusercontent.com/8203219/109903289-9f3e4280-7c69-11eb-89e6-144e283f8a6a.png)
 
-The Hummingbot will ask you some questions to complete configuration set up. The configuration item could be explained here. https://docs.hummingbot.io/strategies/pure-market-making/ 
+The Hummingbot will ask you some questions to complete configuration set up. The configuration item could be explained [here](https://docs.hummingbot.io/strategies/pure-market-making/).  
 
 
 ### Connect to OceanEx
@@ -382,7 +383,7 @@ Please type history to check your performance.
 
 ## Support 
 
-OceanEx HummingBot is a fork version of HummingBot . For more information about how to use HummingBot, please refer to HummingBot official user doc website . Please email questions or comments regarding this specification to OceanEx Support.
+OceanEx HummingBot is a fork version of [HummingBot](https://github.com/CoinAlpha/hummingbot) . For more information about how to use HummingBot, please refer to [HummingBot official user doc website](https://docs.hummingbot.io) . Please email questions or comments regarding this specification to [OceanEx Support](https://support.oceanex.pro/hc/en-us/requests/new).
 
 
 
