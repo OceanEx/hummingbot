@@ -22,6 +22,11 @@
        * [MacOS Source Installation](#MacOS-Source-Installation)
  * [Run Hummingbot with OceanEx Connector](#Run-Hummingbot-with-OceanEx-Connector)
     * [Create a new password](#Create-a-new-password)
+    * [Menu](#Menu)
+    * [Config](#Config)
+    * [Connect to OceanEx](#Connect-to-OceanEx)
+    * [Start](#Start)
+ * [Performance and Statics](Performance-and-Statics)
  * [Support](Support)
 <!--te-->
 
@@ -356,8 +361,28 @@ You could review your order at OceanEx .
 
 
 
+## Performance and Statics
+
+Please type status to check your current orders and account balance.
+
+```
+>>> status
+```
+
+![image](https://user-images.githubusercontent.com/8203219/109905267-897e4c80-7c6c-11eb-8d4c-f27aebff473e.png)
 
 
+Please type history to check your performance.
+
+```
+>>> history
+```
+![image](https://user-images.githubusercontent.com/8203219/109905351-a31f9400-7c6c-11eb-983f-7f85b6fc0e7b.png)
+
+
+## Support 
+
+OceanEx HummingBot is a fork version of HummingBot . For more information about how to use HummingBot, please refer to HummingBot official user doc website . Please email questions or comments regarding this specification to OceanEx Support.
 
 
 
