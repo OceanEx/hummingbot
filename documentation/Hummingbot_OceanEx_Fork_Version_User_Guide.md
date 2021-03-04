@@ -36,7 +36,7 @@
 
 Hummingbot is an open-source project aimed to help users, traders and exchanges to build different trading strategies and run those strategies on the top of cryptocurrency exchange platforms.
 
-The Hummingbot source code can be downloaded through Hummingbot official github project. The full details of documentation is available from Hummingbot official website.
+The Hummingbot source code can be downloaded through Hummingbot official github project. The full details of documentation is available from [Hummingbot official website](https://github.com/CoinAlpha/hummingbot).
 
 ### OceanEx Fork Version
 
