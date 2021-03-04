@@ -26,6 +26,7 @@
     * [Config](#Config)
     * [Connect to OceanEx](#Connect-to-OceanEx)
     * [Start](#Start)
+    * [Re-Start](#Re-start)
  * [Performance and Statics](#Performance-and-Statics)
  * [Support](#Support)
 <!--te-->
@@ -358,6 +359,10 @@ You could review your order at OceanEx .
 
 
 ![image](https://user-images.githubusercontent.com/8203219/109904904-f0e7cc80-7c6b-11eb-9012-157630688173.png)
+
+### Re-Start 
+
+if you quit from humingbot, you could use ```start.sh``` to re-start hummingbot.
 
 
 
