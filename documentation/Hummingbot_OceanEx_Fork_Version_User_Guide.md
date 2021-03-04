@@ -269,3 +269,36 @@ once trigger ```create.sh``` or ```start.sh```, you will see the hummingbot pane
 
 ### Create a new password
 
+create a new password for secruity concerns. 
+
+![image](https://user-images.githubusercontent.com/8203219/109876147-68ebcd80-7c3f-11eb-8748-f090fbb67861.png)
+
+
+### Menu 
+
+hit 'Tab' key to see all the config options. 
+
+![image](https://user-images.githubusercontent.com/8203219/109878124-d8fb5300-7c41-11eb-9d3a-b32b9a38b0ec.png)
+
+
+### Config
+
+chose 'create' from menu to start set up a OceanEx connector. 
+
+* Chose strategy
+
+for more details about different kinds of strategies. please check hummingbot offical website section. 
+
+![image](https://user-images.githubusercontent.com/8203219/109878766-b289e780-7c42-11eb-9136-3dab726c85d1.png)
+
+let's use *pure_market_making* strategy as example
+
+
+
+
+
+
+
+
+
+
