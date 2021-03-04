@@ -26,7 +26,7 @@
     * [Config](#Config)
     * [Connect to OceanEx](#Connect-to-OceanEx)
     * [Start](#Start)
- * [Performance and Statics](Performance-and-Statics)
+ * [Performance and Statics](#Performance-and-Statics)
  * [Support](Support)
 <!--te-->
 
